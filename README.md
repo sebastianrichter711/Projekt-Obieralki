@@ -10,3 +10,5 @@ w seriwsie. Zamawiać dania mogą tylko zalogowani użytkownicy.
 - frontend: React.js
 - backend: Flask
 - baza danych: PostgreSQL
+
+Licensed under the [MIT License](LICENSE)
