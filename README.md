@@ -8,7 +8,7 @@ Dostępne kryteria wyszukiwania to m.in. możliwość dowozu zamówienia, typ ku
 w seriwsie. Zamawiać dania mogą tylko zalogowani użytkownicy.
 ## Technologie
 - frontend: React.js
-- backend: Flask
+- backend: Python/Flask
 - baza danych: PostgreSQL
 
 Licensed under the [MIT License](LICENSE)
