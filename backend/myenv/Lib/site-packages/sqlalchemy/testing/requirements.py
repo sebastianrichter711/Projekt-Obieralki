@@ -18,6 +18,7 @@ to provide specific inclusion/exclusions.
 import platform
 import sys
 
+from . import asyncio as _test_asyncio
 from . import exclusions
 from . import only_on
 from .. import util
@@ -1312,6 +1313,10 @@ class SuiteRequirements(Requirements):
         )
 
     @property
+    def is64bit(self):
+        return exclusions.only_if(lambda: util.is64bit, "64bit required")
+
+    @property
     def patch_library(self):
         def check_lib():
             try:
@@ -1393,6 +1398,9 @@ class SuiteRequirements(Requirements):
     @property
     def greenlet(self):
         def go(config):
+            if not _test_asyncio.ENABLE_ASYNCIO:
+                return False
+
             try:
                 import greenlet  # noqa: F401
             except ImportError:

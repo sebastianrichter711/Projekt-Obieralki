@@ -14,7 +14,9 @@ import operator
 import platform
 import sys
 
+py312 = sys.version_info >= (3, 12)
 py311 = sys.version_info >= (3, 11)
+py310 = sys.version_info >= (3, 10)
 py39 = sys.version_info >= (3, 9)
 py38 = sys.version_info >= (3, 8)
 py37 = sys.version_info >= (3, 7)
@@ -27,6 +29,7 @@ cpython = platform.python_implementation() == "CPython"
 win32 = sys.platform.startswith("win")
 osx = sys.platform.startswith("darwin")
 arm = "aarch" in platform.machine().lower()
+is64bit = platform.architecture()[0] == "64bit"
 
 has_refcount_gc = bool(cpython)
 
