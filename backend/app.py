@@ -32,7 +32,7 @@ class User(db.Model):
     role = db.Column(db.Enum('admin', 'moderator', 'user', name='user_role'), index=True)
     surname = db.Column(db.String(30), nullable=False)
     orders = db.relationship('Order', backref='user', lazy=True)
-    moderators = db.relationship('Restaurant', backref='user', lazy=True)
+    restaurants = db.relationship('Restaurant', backref='user', lazy=True)
 
     def __init__(self, active,address,authorize_date,birth_date,date_created,date_of_last_login,
     email, end_authorize_date, name,password,phone,role,surname):
@@ -65,6 +65,16 @@ class Order(db.Model):
     total_cost = db.Column(db.Float, nullable=False)
     user_id = db.Column(GUID(), db.ForeignKey('user.id'), nullable=False)
 
+    def __init__(self,delivery,delivery_cost,dishes_cost,is_completed,order_date,payment_form,total_cost,user_id):
+        self.delivery = delivery
+        self.delivery_cost = delivery_cost
+        self.dishes_cost = dishes_cost
+        self.is_completed = is_completed
+        self.order_date = order_date
+        self.payment_form = payment_form
+        self.total_cost = total_cost
+        self.user_id = user_id
+
 class Dish(db.Model):
     id = db.Column(GUID(), primary_key=True, default=lambda: str(uuid.uuid4()))
     description = db.Column(db.String(200), nullable=True)
@@ -77,6 +87,17 @@ class Dish(db.Model):
     price = db.Column(db.Float, nullable=False)
     restaurant_id = db.Column(GUID(), db.ForeignKey('restaurant.id'), nullable=True)
     sauces = db.Column(db.PickleType, nullable=True)
+
+    def __init__(self, description,dish_subtype,dish_type,meat_types,name,pizza_diameter,price,restaurant_id,sauces):
+        self.description = description
+        self.dish_subtype = dish_subtype
+        self.dish_type = dish_type
+        self.meat_types = meat_types
+        self.name = name
+        self.pizza_diameter = pizza_diameter
+        self.price = price
+        self.restaurant_id = restaurant_id
+        self.sauces = sauces
 
 class Restaurant(db.Model):
     id = db.Column(GUID(), primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -95,6 +116,23 @@ class Restaurant(db.Model):
     waiting_time_for_delivery = db.Column(db.String(15), nullable=False)
     moderator_id = db.Column(GUID(), db.ForeignKey('user.id'), nullable=True)
 
+    def __init__(self, address,delivery_cost,description,discounts,dishes,is_delivery,kitchen_type,logo,min_order_cost,
+    min_order_cost_free_delivery,name,phone,waiting_time_for_delivery,moderator_id):
+        self.address = address
+        self.delivery_cost = delivery_cost
+        self.description = description
+        self.discounts = discounts
+        self.dishes = dishes
+        self.is_delivery = is_delivery
+        self.kitchen_type = kitchen_type
+        self.logo = logo
+        self.min_order_cost = min_order_cost
+        self.min_order_cost_free_delivery = min_order_cost_free_delivery
+        self.name = name
+        self.phone = phone
+        self.waiting_time_for_delivery = waiting_time_for_delivery
+        self.moderator_id = moderator_id
+
 class OrderDish(db.Model):
     id = db.Column(GUID(), primary_key=True, default=lambda: str(uuid.uuid4()))
     count = db.Column(db.Integer, nullable=False)
@@ -104,15 +142,21 @@ class OrderDish(db.Model):
     price = db.Column(db.Float, nullable=False)
     sauce = db.Column(db.String(30), nullable=True)
 
+    def __init__(self,count,meat_type,price,sauce):
+        self.count = count
+        self.meat_type = meat_type
+        self.price = price
+        self.sauce = sauce
+
 class UserSchema(ma.Schema):
     class Meta:
         fields = ('id','active','address','authorize_date','birth_date','date_created','date_of_last_login',
-        'email','end_authorize_date','name','password','phone','role','surname')
+        'email','end_authorize_date','name','password','phone','role','surname','orders','restaurants')
 
 class RestaurantSchema(ma.Schema):
     class Meta:
         fields = ('id','address','delivery_cost','description','discounts','dishes','is_delivery',
-        'kitchen_type','logo','min_order_cost','min_order_cost_free_delivery','name','phone','waiting_time_for_delivery')
+        'kitchen_type','logo','min_order_cost','min_order_cost_free_delivery','name','phone','waiting_time_for_delivery','moderator_id')
 
 class DishSchema(ma.Schema):
     class Meta:

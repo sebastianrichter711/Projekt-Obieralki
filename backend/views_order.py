@@ -1,21 +1,15 @@
 @app.route('/order', methods=['POST'])
 def add_order():
-    active = request.json['active']
-    address = request.json['address']
-    authorize_date = request.json['authorize_date']
-    birth_date = request.json['birth_date']
-    date_created = datetime.now()
-    date_of_last_login = None
-    email = request.json['email']
-    end_authorize_date = request.json['end_authorize_date']
-    name = request.json['name']
-    password = 'xxx'
-    phone = request.json['phone']
-    role = request.json['role']
-    surname = request.json['surname']
+    delivery = request.json['delivery']
+    delivery_cost = request.json['delivery_cost']
+    dishes_cost = request.json['dishes_cost']
+    is_completed = request.json['is_completed']
+    order_date = datetime.now()
+    payment_form = request.json['payment_form']
+    total_cost = request.json['total_cost']
+    user_id = request.json['user_id']
 
-    new_order = Order(active,address,authorize_date,birth_date,date_created,date_of_last_login,email,
-    end_authorize_date,name,password,phone,role,surname)
+    new_order = Order(delivery,delivery_cost,dishes_cost,is_completed,order_date,payment_form,total_cost,user_id)
 
     db.session.add(new_order)
     db.session.commit()
@@ -38,30 +32,23 @@ def update_order(id):
 
     order = Order.query.get(id)
 
-    active = request.json['active']
-    address = request.json['address']
-    authorize_date = request.json['authorize_date']
-    birth_date = request.json['birth_date']
-    email = request.json['email']
-    end_authorize_date = request.json['end_authorize_date']
-    name = request.json['name']
-    phone = request.json['phone']
-    role = request.json['role']
-    surname = request.json['surname']
+    delivery = request.json['delivery']
+    delivery_cost = request.json['delivery_cost']
+    dishes_cost = request.json['dishes_cost']
+    is_completed = request.json['is_completed']
+    order_date = datetime.now()
+    payment_form = request.json['payment_form']
+    total_cost = request.json['total_cost']
+    user_id = request.json['user_id']
 
-    order.active = active
-    order.address = address
-    order.authorize_date = authorize_date
-    order.birth_date = birth_date
-    order.date_created = user.date_created
-    order.date_of_last_login = user.date_of_last_login
-    order.email = email
-    order.end_authorize_date = user.end_authorize_date
-    order.name = name
-    order.password = user.password
-    order.phone = phone
-    order.role = role
-    order.surname = surname
+    order.delivery = delivery
+    order.delivery_cost = delivery_cost
+    order.dishes_cost = dishes_cost
+    order.is_completed = is_completed
+    order.order_date = order.order_date
+    order.payment_form = payment_form
+    order.total_cost = total_cost
+    order.user_id = user_id
 
     db.session.commit()
 

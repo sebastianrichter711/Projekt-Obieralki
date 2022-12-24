@@ -1,21 +1,16 @@
 @app.route('/dish', methods=['POST'])
 def add_dish():
-    active = request.json['active']
-    address = request.json['address']
-    authorize_date = request.json['authorize_date']
-    birth_date = request.json['birth_date']
-    date_created = datetime.now()
-    date_of_last_login = None
-    email = request.json['email']
-    end_authorize_date = request.json['end_authorize_date']
+    description = request.json['description']
+    dish_subtype = request.json['dish_subtype']
+    dish_type = request.json['dish_type']
+    meat_types = request.json['meat_types']
     name = request.json['name']
-    password = 'xxx'
-    phone = request.json['phone']
-    role = request.json['role']
-    surname = request.json['surname']
+    pizza_diameter = request.json['pizza_diameter']
+    price = request.json['price']
+    restaurant_id = request.json['restaurant_id']
+    sauces = request.json['sauces']
 
-    new_dish = Dish(active,address,authorize_date,birth_date,date_created,date_of_last_login,email,
-    end_authorize_date,name,password,phone,role,surname)
+    new_dish = Dish(description,dish_subtype,dish_type,meat_types,name,pizza_diameter,price,restaurant_id,sauces)
 
     db.session.add(new_dish)
     db.session.commit()
@@ -38,31 +33,26 @@ def update_dish(id):
 
     dish = Dish.query.get(id)
 
-    active = request.json['active']
-    address = request.json['address']
-    authorize_date = request.json['authorize_date']
-    birth_date = request.json['birth_date']
-    email = request.json['email']
-    end_authorize_date = request.json['end_authorize_date']
+    description = request.json['description']
+    dish_subtype = request.json['dish_subtype']
+    dish_type = request.json['dish_type']
+    meat_types = request.json['meat_types']
     name = request.json['name']
-    phone = request.json['phone']
-    role = request.json['role']
-    surname = request.json['surname']
+    pizza_diameter = request.json['pizza_diameter']
+    price = request.json['price']
+    restaurant_id = request.json['restaurant_id']
+    sauces = request.json['sauces']
 
-    dish.active = active
-    dish.address = address
-    dish.authorize_date = authorize_date
-    dish.birth_date = birth_date
-    dish.date_created = user.date_created
-    dish.date_of_last_login = user.date_of_last_login
-    dish.email = email
-    dish.end_authorize_date = user.end_authorize_date
+    dish.description = description
+    dish.dish_subtype = dish_subtype
+    dish.dish_type = dish_type
+    dish.meat_types = meat_types
     dish.name = name
-    dish.password = user.password
-    dish.phone = phone
-    dish.role = role
-    dish.surname = surname
-
+    dish.pizza_diameter = pizza_diameter
+    dish.price = price
+    dish.restaurant_id = restaurant_id
+    dish.sauces = sauces
+    
     db.session.commit()
 
     return dish_schema.jsonify(dish)

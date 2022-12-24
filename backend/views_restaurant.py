@@ -1,21 +1,22 @@
 @app.route('/restaurant', methods=['POST'])
 def add_restaurant():
-    active = request.json['active']
     address = request.json['address']
-    authorize_date = request.json['authorize_date']
-    birth_date = request.json['birth_date']
-    date_created = datetime.now()
-    date_of_last_login = None
-    email = request.json['email']
-    end_authorize_date = request.json['end_authorize_date']
+    delivery_cost = request.json['delivery_cost']
+    description = request.json['description']
+    discounts = request.json['discounts']
+    dishes = request.json['dishes']
+    is_delivery = request.json['is_delivery']
+    kitchen_type = request.json['kitchen_type']
+    logo = request.json['logo']
+    min_order_cost = request.json['min_order_cost']
+    min_order_cost_free_delivery = request.json['min_order_cost_free_delivery']
     name = request.json['name']
-    password = 'xxx'
     phone = request.json['phone']
-    role = request.json['role']
-    surname = request.json['surname']
+    waiting_time_for_delivery = request.json['waiting_time_for_delivery']
+    moderator_id = request.json['moderator_id']
 
-    new_restaurant = Restaurant(active,address,authorize_date,birth_date,date_created,date_of_last_login,email,
-    end_authorize_date,name,password,phone,role,surname)
+    new_restaurant = Restaurant(address,delivery_cost,description,discounts,dishes,is_delivery,kitchen_type,logo,min_order_cost,
+    min_order_cost_free_delivery,name,phone,waiting_time_for_delivery,moderator_id)
 
     db.session.add(new_restaurant)
     db.session.commit()
@@ -38,30 +39,35 @@ def update_restaurant(id):
 
     restaurant = Restaurant.query.get(id)
 
-    active = request.json['active']
     address = request.json['address']
-    authorize_date = request.json['authorize_date']
-    birth_date = request.json['birth_date']
-    email = request.json['email']
-    end_authorize_date = request.json['end_authorize_date']
+    delivery_cost = request.json['delivery_cost']
+    description = request.json['description']
+    discounts = request.json['discounts']
+    dishes = request.json['dishes']
+    is_delivery = request.json['is_delivery']
+    kitchen_type = request.json['kitchen_type']
+    logo = request.json['logo']
+    min_order_cost = request.json['min_order_cost']
+    min_order_cost_free_delivery = request.json['min_order_cost_free_delivery']
     name = request.json['name']
     phone = request.json['phone']
-    role = request.json['role']
-    surname = request.json['surname']
+    waiting_time_for_delivery = request.json['waiting_time_for_delivery']
+    moderator_id = request.json['moderator_id']
 
-    restaurant.active = active
     restaurant.address = address
-    restaurant.authorize_date = authorize_date
-    restaurant.birth_date = birth_date
-    restaurant.date_created = user.date_created
-    restaurant.date_of_last_login = user.date_of_last_login
-    restaurant.email = email
-    restaurant.end_authorize_date = user.end_authorize_date
+    restaurant.delivery_cost = delivery_cost
+    restaurant.description = description
+    restaurant.discounts = discounts
+    restaurant.dishes = dishes
+    restaurant.is_delivery = is_delivery
+    restaurant.kitchen_type = kitchen_type
+    restaurant.logo = logo
+    restaurant.min_order_cost = min_order_cost
+    restaurant.min_order_cost_free_delivery = min_order_cost_free_delivery
     restaurant.name = name
-    restaurant.password = user.password
     restaurant.phone = phone
-    restaurant.role = role
-    restaurant.surname = surname
+    restaurant.waiting_time_for_delivery = waiting_time_for_delivery
+    restaurant.moderator_id = moderator_id
 
     db.session.commit()
 
