@@ -1,43 +1,35 @@
 from . import db
 from sqlalchemy.sql import func
 from .guid import *
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model):
     id = db.Column(GUID(), primary_key=True, default=lambda: str(uuid.uuid4()))
     active = db.Column(db.Boolean, nullable=False)
-    address = db.Column(db.String(200), nullable=False)
+    address = db.Column(db.String(200), nullable=True)
     authorize_date = db.Column(db.DateTime(timezone=True), nullable=True)
-    birth_date = db.Column(db.DateTime(timezone=True), nullable=False)
-    date_created = db.Column(db.DateTime(timezone=True),server_default=func.now())
-    date_of_last_login = db.Column(db.DateTime(timezone=True),server_default=func.now())
+    birth_date = db.Column(db.DateTime(timezone=True), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True),server_default=func.now(),nullable=False)
+    date_of_last_login = db.Column(db.DateTime(timezone=True),nullable=True)
     email=db.Column(db.String(200), unique=True, nullable=False)
     end_authorize_date = db.Column(db.DateTime(timezone=True), nullable=True)
-    name = db.Column(db.String(30), nullable=False)
+    name = db.Column(db.String(30), nullable=True)
     password = db.Column(db.String(200), nullable=False)
-    phone = db.Column(db.String(14), nullable=False)
-    role = db.Column(db.Enum('admin', 'moderator', 'user', name='user_role'), index=True)
-    surname = db.Column(db.String(30), nullable=False)
+    phone = db.Column(db.String(14), nullable=True)
+    role = db.Column(db.Enum('admin', 'moderator', 'user', name='user_role'), index=True, nullable=False)
+    surname = db.Column(db.String(30), nullable=True)
     orders = db.relationship('Order', backref='user', lazy=True)
     restaurants = db.relationship('Restaurant', backref='user', lazy=True)
 
-    def __init__(self, active,address,authorize_date,birth_date,date_created,date_of_last_login,
-    email, end_authorize_date, name,password,phone,role,surname):
+    def __init__(self, active,date_created,email,role,password):
         self.active = active
-        self.address = address
-        self.authorize_date = authorize_date
-        self.birth_date = birth_date
         self.date_created = date_created
-        self.date_of_last_login = date_of_last_login
         self.email = email
-        self.end_authorize_date = end_authorize_date
-        self.name = name
         self.password = password
-        self.phone = phone
-        self.role = role
-        self.surname = surname
+        self.role=role
 
-    def __repr__(self):
-        return f'<Student {self.firstname}>'
+    def verify_password(self, pwd):
+        return check_password_hash(self.password, pwd)
 
 class Order(db.Model):
     id = db.Column(GUID(), primary_key=True, default=lambda: str(uuid.uuid4()))

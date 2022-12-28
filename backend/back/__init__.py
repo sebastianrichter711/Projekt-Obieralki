@@ -2,16 +2,20 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 import os
-#from flask_login import LoginManager
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 
 conn="postgresql://{0}:{1}@{2}:{3}/{4}".format('postgres','postgres','localhost','5432','twojejedzenie3x')
 db = SQLAlchemy()
 ma=Marshmallow()
+admin=Admin()
+APP_SECRET_KEY = 'wwenjbwr3briewf'
 
 def create_app():
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = conn
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SECRET_KEY'] = 'wwenjbwr3briewf'
     db.init_app(app)
     ma=Marshmallow(app)
 
@@ -27,7 +31,14 @@ def create_app():
     app.register_blueprint(views_order, url_prefix='/')
     app.register_blueprint(views_user, url_prefix='/')
 
-    # from .models import User,Restaurant,Dish,Order,OrderDish
+    admin=Admin(app)
+
+    from .models import User,Restaurant,Dish,Order,OrderDish
+
+    admin.add_view(ModelView(User,db.session))
+    admin.add_view(ModelView(Restaurant,db.session))
+    admin.add_view(ModelView(Dish,db.session))
+    admin.add_view(ModelView(Order,db.session))
 
     # with app.app_context():
     #     db.drop_all()
