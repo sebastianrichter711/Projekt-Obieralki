@@ -1,4 +1,14 @@
-@app.route('/order', methods=['POST'])
+from flask import Flask,request,jsonify,Blueprint
+from flask_marshmallow import Marshmallow
+from datetime import datetime
+from .models import *
+from . import db
+from .schemas import order_schema, orders_schema
+
+
+views_order = Blueprint('views_order', __name__)
+
+@views_order.route('/order', methods=['POST'])
 def add_order():
     delivery = request.json['delivery']
     delivery_cost = request.json['delivery_cost']
@@ -16,18 +26,18 @@ def add_order():
 
     return order_schema.jsonify(new_order)
 
-@app.route('/all_orders', methods=['GET'])
+@views_order.route('/all_orders', methods=['GET'])
 def get_orders():
     all_orders = Order.query.all()
     result = orders_schema.dump(all_orders)
     return jsonify(result)
 
-@app.route('/order/<id>', methods=['GET'])
+@views_order.route('/order/<id>', methods=['GET'])
 def get_order(id):
     order = Order.query.get(id)
     return order_schema.jsonify(order)
 
-@app.route('/order/<id>', methods=['PUT'])
+@views_order.route('/order/<id>', methods=['PUT'])
 def update_order(id):
 
     order = Order.query.get(id)
@@ -54,7 +64,7 @@ def update_order(id):
 
     return order_schema.jsonify(order)
 
-@app.route('/order/<id>', methods=["DELETE"])
+@views_order.route('/order/<id>', methods=["DELETE"])
 def delete_order(id):
     order = Order.query.get(id)
     db.session.delete(order)

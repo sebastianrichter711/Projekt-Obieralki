@@ -1,4 +1,14 @@
-@app.route('/restaurant', methods=['POST'])
+from flask import Flask,request,jsonify,Blueprint
+from flask_marshmallow import Marshmallow
+from datetime import datetime
+from .models import *
+from . import db
+from .schemas import restaurant_schema, restaurants_schema
+
+
+views_restaurant = Blueprint('views_restaurant', __name__)
+
+@views_restaurant.route('/restaurant', methods=['POST'])
 def add_restaurant():
     address = request.json['address']
     delivery_cost = request.json['delivery_cost']
@@ -23,18 +33,47 @@ def add_restaurant():
 
     return restaurant_schema.jsonify(new_restaurant)
 
-@app.route('/all_restaurants', methods=['GET'])
+@views_restaurant.route('/all_restaurants', methods=['GET'])
 def get_restaurants():
     all_restaurants = Restaurant.query.all()
     result = restaurants_schema.dump(all_restaurants)
     return jsonify(result)
 
-@app.route('/restaurant/<id>', methods=['GET'])
+@views_restaurant.route('/all_restaurants_by_name_or_location', methods=['GET'])
+def get_all_restaurants_by_name_or_location():
+    location = request.json['location']
+    location_to_request = '%' + location + '%'
+    results = []
+    all_restaurants_by_name = Restaurant.query.filter(Restaurant.name.like(location_to_request))
+    if all_restaurants_by_name != None:
+        if len(results) == 0:
+            for rest in all_restaurants_by_name:
+                results.append(rest)
+        else:
+            for result in results:
+                for rest in all_restaurants_by_name:
+                    if result.id is not rest.id:
+                        results.append(rest)
+    all_restaurants_by_address = Restaurant.query.filter(Restaurant.address.like(location_to_request))
+    if all_restaurants_by_address != None:
+        if len(results) == 0:
+            for rest in all_restaurants_by_address:
+                results.append(rest)
+        else:
+            for result in results:
+                for rest in all_restaurants_by_address:
+                    if result.id is not rest.id:
+                        results.append(rest)
+
+    result_of_search = restaurants_schema.dump(results)
+    return jsonify(result_of_search)
+
+@views_restaurant.route('/restaurant/<id>', methods=['GET'])
 def get_restaurant(id):
     restaurant = Restaurant.query.get(id)
     return restaurant_schema.jsonify(restaurant)
 
-@app.route('/restaurant/<id>', methods=['PUT'])
+@views_restaurant.route('/restaurant/<id>', methods=['PUT'])
 def update_restaurant(id):
 
     restaurant = Restaurant.query.get(id)
@@ -73,7 +112,7 @@ def update_restaurant(id):
 
     return restaurant_schema.jsonify(restaurant)
 
-@app.route('/restaurant/<id>', methods=["DELETE"])
+@views_restaurant.route('/restaurant/<id>', methods=["DELETE"])
 def delete_restaurant(id):
     restaurant = Restaurant.query.get(id)
     db.session.delete(restaurant)
