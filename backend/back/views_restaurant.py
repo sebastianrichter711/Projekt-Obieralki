@@ -4,7 +4,7 @@ from datetime import datetime
 from .models import *
 from . import db
 from .schemas import restaurant_schema, restaurants_schema
-
+from flask_jwt_extended import create_access_token, get_jwt, jwt_required
 
 views_restaurant = Blueprint('views_restaurant', __name__)
 
@@ -24,9 +24,10 @@ def add_restaurant():
     phone = request.json['phone']
     waiting_time_for_delivery = request.json['waiting_time_for_delivery']
     moderator_id = request.json['moderator_id']
+    orders = []
 
     new_restaurant = Restaurant(address,delivery_cost,description,discounts,dishes,is_delivery,kitchen_type,logo,min_order_cost,
-    min_order_cost_free_delivery,name,phone,waiting_time_for_delivery,moderator_id)
+    min_order_cost_free_delivery,name,phone,waiting_time_for_delivery,moderator_id,orders)
 
     db.session.add(new_restaurant)
     db.session.commit()

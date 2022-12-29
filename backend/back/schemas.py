@@ -1,17 +1,5 @@
 from .__init__ import ma
-from .models import User,Restaurant,Dish,Order,OrderDish
-
-class OrderSchema(ma.Schema):
-
-    id=ma.String(dump_only=True)
-    delivery_address=ma.String()
-    delivery_cost=ma.Float()
-    dishes_cost=ma.Float()
-    is_completed=ma.Boolean()
-    order_date=ma.DateTime()
-    payment_form=ma.String()
-    total_cost=ma.Float()
-    user_id=ma.String()
+from .models import User,Restaurant,Dish,Order
 
 class DishSchema(ma.Schema):
 
@@ -25,6 +13,20 @@ class DishSchema(ma.Schema):
     price=ma.Float()
     restaurant_id=ma.String()
     sauces=ma.List(ma.String)
+    
+class OrderSchema(ma.Schema):
+
+    id=ma.String(dump_only=True)
+    delivery_address=ma.String()
+    delivery_cost=ma.Float()
+    dishes_cost=ma.Float()
+    is_completed=ma.Boolean()
+    order_date=ma.DateTime()
+    payment_form=ma.String()
+    total_cost=ma.Float()
+    user_id=ma.String()
+    restaurant_id=ma.String()
+    order_dishes=ma.Nested(DishSchema,many=True)
     
 class RestaurantSchema(ma.Schema):
     id = ma.String(dump_only=True)
@@ -42,6 +44,8 @@ class RestaurantSchema(ma.Schema):
     phone = ma.String()
     waiting_time_for_delivery = ma.String()
     moderator_id = ma.String()
+    orders=ma.Nested(OrderSchema,many=True)
+
 
 class UserSchema(ma.Schema):
     id=ma.String(dump_only=True)

@@ -4,20 +4,28 @@ from flask_marshmallow import Marshmallow
 import os
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from flask_jwt_extended import JWTManager
+from datetime import timedelta
+
 
 conn="postgresql://{0}:{1}@{2}:{3}/{4}".format('postgres','postgres','localhost','5432','twojejedzenie3x')
 db = SQLAlchemy()
 ma=Marshmallow()
 admin=Admin()
 APP_SECRET_KEY = 'wwenjbwr3briewf'
+ACCESS_EXPIRES = timedelta(hours=1)
+jwt=JWTManager()
 
 def create_app():
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = conn
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = 'wwenjbwr3briewf'
+    app.config['JWT_SECRET_KEY'] = 'efegbhrg49875gfd4'
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = ACCESS_EXPIRES
     db.init_app(app)
     ma=Marshmallow(app)
+    jwt=JWTManager(app)
 
     from .views_auth import views_auth
     from .views_restaurant import views_restaurant
@@ -33,7 +41,7 @@ def create_app():
 
     admin=Admin(app)
 
-    from .models import User,Restaurant,Dish,Order,OrderDish
+    from .models import User,Restaurant,Dish,Order
 
     admin.add_view(ModelView(User,db.session))
     admin.add_view(ModelView(Restaurant,db.session))

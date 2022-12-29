@@ -8,7 +8,7 @@ class User(db.Model):
     active = db.Column(db.Boolean, nullable=False)
     address = db.Column(db.String(200), nullable=True)
     authorize_date = db.Column(db.DateTime(timezone=True), nullable=True)
-    birth_date = db.Column(db.DateTime(timezone=True), nullable=True)
+    birth_date = db.Column(db.Date, nullable=True)
     date_created = db.Column(db.DateTime(timezone=True),server_default=func.now(),nullable=False)
     date_of_last_login = db.Column(db.DateTime(timezone=True),nullable=True)
     email=db.Column(db.String(200), unique=True, nullable=False)
@@ -31,27 +31,35 @@ class User(db.Model):
     def verify_password(self, pwd):
         return check_password_hash(self.password, pwd)
 
+class TokenBlocklist(db.Model):
+    id = db.Column(GUID(), primary_key=True, default=lambda: str(uuid.uuid4()))
+    jti = db.Column(db.String(36), nullable=False, index=True)
+    created_at = db.Column(db.DateTime, nullable=False)
+
+order_dishes = db.Table('order_dishes',
+    db.Column('order_id', GUID(), db.ForeignKey('order.id'), primary_key=True, default=lambda: str(uuid.uuid4())),
+    db.Column('dish_id', GUID(), db.ForeignKey('dish.id'), primary_key=True, default=lambda: str(uuid.uuid4())),
+    db.Column('count', db.Integer, nullable=False),
+    db.Column('price', db.Float, nullable=False)
+)
+
 class Order(db.Model):
     id = db.Column(GUID(), primary_key=True, default=lambda: str(uuid.uuid4()))
-    delivery_address = db.Column(db.String(200), nullable=False)
-    delivery_cost = db.Column(db.Float, nullable=False)
-    #dishes = db.Column(db.Boolean, nullable=False)
-    dishes_cost = db.Column(db.Float, nullable=False)
+    delivery_address = db.Column(db.String(200), nullable=True)
+    delivery_cost = db.Column(db.Float, nullable=True)
+    order_dishes = db.relationship('Dish', secondary=order_dishes, lazy='subquery', backref=db.backref('orders', lazy=True))
+    dishes_cost = db.Column(db.Float, nullable=True)
     is_completed = db.Column(db.Boolean, nullable=False)
-    order_date = db.Column(db.DateTime(timezone=True),server_default=func.now())
-    payment_form = db.Column(db.Enum('card', 'blik', 'voucher', name='payment_form'), index=True)
-    total_cost = db.Column(db.Float, nullable=False)
+    order_date = db.Column(db.DateTime(timezone=True),nullable=True)
+    payment_form = db.Column(db.Enum('card', 'blik', 'voucher', name='payment_form'), index=True,nullable=True)
+    total_cost = db.Column(db.Float, nullable=True)
     user_id = db.Column(GUID(), db.ForeignKey('user.id'), nullable=False)
+    restaurant_id = db.Column(GUID(), db.ForeignKey('restaurant.id'), nullable=False)
 
-    def __init__(self,delivery,delivery_cost,dishes_cost,is_completed,order_date,payment_form,total_cost,user_id):
-        self.delivery = delivery
-        self.delivery_cost = delivery_cost
-        self.dishes_cost = dishes_cost
+    def __init__(self,is_completed,user_id,restaurant_id):
         self.is_completed = is_completed
-        self.order_date = order_date
-        self.payment_form = payment_form
-        self.total_cost = total_cost
         self.user_id = user_id
+        self.restaurant_id = restaurant_id
 
 class Dish(db.Model):
     id = db.Column(GUID(), primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -60,7 +68,6 @@ class Dish(db.Model):
     dish_type = db.Column(db.Enum('starter', 'soup', 'main_course','dessert','pizza','kebab','additives','drinks', name='dish_type'), index=True)
     meat_types = db.Column(db.PickleType, nullable=True)
     name = db.Column(db.String(300), nullable=False)
-    #order_dishes = db.Column(db.Boolean, nullable=False)
     pizza_diameter = db.Column(db.Float, nullable=True)
     price = db.Column(db.Float, nullable=False)
     restaurant_id = db.Column(GUID(), db.ForeignKey('restaurant.id'), nullable=True)
@@ -93,9 +100,10 @@ class Restaurant(db.Model):
     phone = db.Column(db.String(14), nullable=False)
     waiting_time_for_delivery = db.Column(db.String(15), nullable=False)
     moderator_id = db.Column(GUID(), db.ForeignKey('user.id'), nullable=True)
+    orders = db.relationship('Order', backref='restaurant', lazy=True)
 
     def __init__(self, address,delivery_cost,description,discounts,dishes,is_delivery,kitchen_type,logo,min_order_cost,
-    min_order_cost_free_delivery,name,phone,waiting_time_for_delivery,moderator_id):
+    min_order_cost_free_delivery,name,phone,waiting_time_for_delivery,moderator_id,orders):
         self.address = address
         self.delivery_cost = delivery_cost
         self.description = description
@@ -110,18 +118,4 @@ class Restaurant(db.Model):
         self.phone = phone
         self.waiting_time_for_delivery = waiting_time_for_delivery
         self.moderator_id = moderator_id
-
-class OrderDish(db.Model):
-    id = db.Column(GUID(), primary_key=True, default=lambda: str(uuid.uuid4()))
-    count = db.Column(db.Integer, nullable=False)
-    #dish_id = db.Column(db.Boolean, nullable=False)
-    meat_type = db.Column(db.String(30), nullable=True)
-    #order_id = db.Column(db.Boolean, nullable=False)
-    price = db.Column(db.Float, nullable=False)
-    sauce = db.Column(db.String(30), nullable=True)
-
-    def __init__(self,count,meat_type,price,sauce):
-        self.count = count
-        self.meat_type = meat_type
-        self.price = price
-        self.sauce = sauce
+        self.orders = orders
