@@ -7,12 +7,11 @@ from flask_admin.contrib.sqla import ModelView
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
 
-
 conn="postgresql://{0}:{1}@{2}:{3}/{4}".format('postgres','postgres','localhost','5432','twojejedzenie3x')
 db = SQLAlchemy()
 ma=Marshmallow()
 admin=Admin()
-APP_SECRET_KEY = 'wwenjbwr3briewf'
+APP_SECRET_KEY = 'fTjWnZr4u7x!A%D*G-JaNdRgUkXp2s5v'
 ACCESS_EXPIRES = timedelta(hours=1)
 jwt=JWTManager()
 
@@ -20,8 +19,8 @@ def create_app():
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = conn
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SECRET_KEY'] = 'wwenjbwr3briewf'
-    app.config['JWT_SECRET_KEY'] = 'efegbhrg49875gfd4'
+    app.config['SECRET_KEY'] = 'fTjWnZr4u7x!A%D*G-JaNdRgUkXp2s5v'
+    app.config['JWT_SECRET_KEY'] = '+MbQeThWmZq3t6w9z$C&F)J@NcRfUjXn'
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = ACCESS_EXPIRES
     db.init_app(app)
     ma=Marshmallow(app)
@@ -33,11 +32,11 @@ def create_app():
     from .views_order import views_order
     from .views_user import views_user
 
-    app.register_blueprint(views_auth, url_prefix='/')
-    app.register_blueprint(views_restaurant, url_prefix='/')
-    app.register_blueprint(views_dish, url_prefix='/')
-    app.register_blueprint(views_order, url_prefix='/')
-    app.register_blueprint(views_user, url_prefix='/')
+    app.register_blueprint(views_auth, url_prefix='/api/auth')
+    app.register_blueprint(views_restaurant, url_prefix='/api/restaurants')
+    app.register_blueprint(views_dish, url_prefix='/api/dishes')
+    app.register_blueprint(views_order, url_prefix='/api/orders')
+    app.register_blueprint(views_user, url_prefix='/api/users')
 
     admin=Admin(app)
 

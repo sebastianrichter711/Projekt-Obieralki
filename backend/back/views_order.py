@@ -6,109 +6,254 @@ from . import db
 from .schemas import order_schema, orders_schema
 import uuid
 from sqlalchemy import select, update, delete
+import sys
 
 
 views_order = Blueprint('views_order', __name__)
 
-@views_order.route('/all_orders/completed/<uuid:id>', methods=['GET'])
-def get_users_orders_completed(id):
-    all_orders = Order.query.filter(Order.user_id==id, Order.is_completed==True)
+@views_order.route('/users/<uuid:user_id>/completed', methods=['GET'])
+@jwt_required()
+def get_users_orders_completed(user_id):
+    all_orders = Order.query.filter(Order.user_id==user_id, Order.is_completed==True)
+    if len(all_orders)==0:
+        return jsonify("Orders not found"), 404
     result = orders_schema.dump(all_orders)
     return jsonify(result)
 
-@views_order.route('/all_orders/uncompleted/<uuid:id>', methods=['GET'])
-def get_users_orders_uncompleted(id):
-    all_orders = Order.query.filter(Order.user_id==id, Order.is_completed==False)
+@views_order.route('/users/<uuid:user_id>/uncompleted', methods=['GET'])
+@jwt_required()
+def get_users_orders_uncompleted(user_id):
+    all_orders = Order.query.filter(Order.user_id==user_id, Order.is_completed==False)
+    if len(all_orders)==0:
+        return jsonify("Orders not found"), 404
     result = orders_schema.dump(all_orders)
     return jsonify(result)
 
 
-@views_order.route('/add_dish_to_order/<uuid:restaurant_id>/<uuid:user_id>', methods=['POST'])
+@views_order.route('/restaurants/<uuid:restaurant_id>/users/<uuid:user_id>', methods=['POST'])
+@jwt_required()
 def add_dish_to_order(restaurant_id, user_id):
-    order = Order.query.filter(Order.restaurant_id==restaurant_id, Order.user_id==user_id,Order.is_completed==False).first()
     selected_dish_id = uuid.UUID(request.json['dish_id'])
     dish = Dish.query.get(selected_dish_id)
+    if dish is None:
+        return jsonify("Dish not found"), 404
     count = request.json['count']
+    order = Order.query.filter(Order.restaurant_id==restaurant_id, Order.user_id==user_id,Order.is_completed==False).first()
 
-    if order is None:
-        new_order=Order(is_completed=False, user_id=user_id, restaurant_id=restaurant_id)
-        db.session.add(new_order)
-        db.session.commit()
+    try:
+        if order is None:
+            new_order=Order(is_completed=False, user_id=user_id, restaurant_id=restaurant_id)
+            db.session.add(new_order)
+            db.session.commit()
 
-        new_position = order_dishes.insert().values(order_id=new_order.id, dish_id=selected_dish_id, count=count, price=count*dish.price)
-        db.session.execute(new_position)
-        db.session.commit()
+            new_position = order_dishes.insert().values(order_id=new_order.id, dish_id=selected_dish_id, count=count, price=count*dish.price)
+            db.session.execute(new_position)
+            db.session.commit()
 
-        return order_schema.jsonify(new_order)
-    else:
-        new_position = order_dishes.insert().values(order_id=order.id, dish_id=selected_dish_id, count=count, price=count*dish.price)
-        db.session.execute(new_position)
-        db.session.commit()
+            restaurant = Restaurant.query.get(restaurant_id)
+            if restaurant is None:
+                return jsonify("Restaurant not found"), 404
+
+            stmt = select(order_dishes.columns.price).where(order_dishes.columns.order_id==new_order.id)
+            results = db.session.execute(stmt).fetchall()   
+
+            summary_cost=0.0
+            for result in results:
+                summary_cost += result[0]
         
-        return order_schema.jsonify(order)
+            new_order.dishes_cost = summary_cost
+            if restaurant.is_delivery:
+                if summary_cost >= restaurant.min_order_cost_free_delivery and restaurant.min_order_cost_free_delivery is not None:
+                    new_order.delivery_cost = 0.0
+                else:
+                    new_order.delivery_cost = restaurant.delivery_cost
+            else:
+                new_order.delivery_cost = 0.0
+            new_order.total_cost = new_order.dishes_cost + new_order.delivery_cost
 
-@views_order.route('/update_order/<uuid:order_id>/<uuid:dish_id>', methods=['POST'])
+            db.session.commit()
+
+            return order_schema.jsonify(new_order), 201
+        else:
+            new_position = order_dishes.insert().values(order_id=order.id, dish_id=selected_dish_id, count=count, price=count*dish.price)
+            db.session.execute(new_position)
+            db.session.commit()
+
+            restaurant = Restaurant.query.get(restaurant_id)
+            if restaurant is None:
+                return jsonify("Restaurant not found"), 404
+
+            stmt = select(order_dishes.columns.price).where(order_dishes.columns.order_id==order.id)
+            results = db.session.execute(stmt).fetchall()   
+
+            summary_cost=0.0
+            for result in results:
+                summary_cost += result[0]
+        
+            order.dishes_cost = summary_cost
+            if restaurant.is_delivery:
+                if summary_cost >= restaurant.min_order_cost_free_delivery and restaurant.min_order_cost_free_delivery is not None:
+                    order.delivery_cost = 0.0
+                else:
+                    order.delivery_cost = restaurant.delivery_cost
+            else:
+                order.delivery_cost=0.0
+            order.total_cost = order.dishes_cost + order.delivery_cost
+
+            db.session.commit()
+        
+            return order_schema.jsonify(order)
+    except Exception as err:
+        print(type(err))
+        return jsonify("Failure in adding a dish to an order"), 422
+
+@views_order.route('/<uuid:order_id>/dishes/<uuid:dish_id>', methods=['POST'])
+@jwt_required()
 def update_count_of_dish(order_id, dish_id):
-    order = Order.query.get(order_id)
-    dish = Dish.query.get(dish_id)
     count = request.json['count']
-    stmt = update(order_dishes).where(order_dishes.c.order_id==order_id and order_dishes.c.dish_id==dish_id).values(count=count,price=dish.price*count)
-    db.session.execute(stmt)
-    db.session.commit()
 
-    return jsonify("Zaktualizowano zamówienie")
+    try:
+        order = Order.query.get(order_id)
+        if order is None:
+            return jsonify("Order not found"), 404
+        dish = Dish.query.get(dish_id)
+        if dish is None:
+            return jsonify("Dish not found"), 404
+        stmt = update(order_dishes).where(order_dishes.c.order_id==order_id and order_dishes.c.dish_id==dish_id).values(count=count,price=dish.price*count)
+        db.session.execute(stmt)
+        db.session.commit()
 
-@views_order.route('/delete_dish_from_order/<uuid:order_id>/<uuid:dish_id>', methods=['DELETE'])
+        restaurant = Restaurant.query.get(dish.restaurant_id)
+        if restaurant is None:
+            return jsonify("Restaurant not found"), 404
+
+        stmt = select(order_dishes.columns.price).where(order_dishes.columns.order_id==order_id)
+        results = db.session.execute(stmt).fetchall()   
+
+        summary_cost=0.0
+        for result in results:
+            summary_cost += result[0]
+        
+        order.dishes_cost = summary_cost
+        if restaurant.is_delivery:
+            if summary_cost >= restaurant.min_order_cost_free_delivery and restaurant.min_order_cost_free_delivery is not None:
+                order.delivery_cost = 0.0
+            else:
+                order.delivery_cost = restaurant.delivery_cost
+        else:
+            order.delivery_cost=0.0
+        order.total_cost = order.dishes_cost + order.delivery_cost
+
+        db.session.commit()
+
+        return jsonify("An order was updated")
+    except:
+        return jsonify("Failure in updating an order"), 422
+
+@views_order.route('/<uuid:order_id>/dishes/<uuid:dish_id>', methods=['DELETE'])
+@jwt_required()
 def delete_dish_from_order(order_id, dish_id):
-    order = Order.query.get(order_id)
-    dish = Dish.query.get(dish_id)
-    order.order_dishes.remove(dish)
-    db.session.commit()
+    try:
+        order = Order.query.get(order_id)
+        if order is None:
+            return jsonify("Order not found"), 404
+        dish = Dish.query.get(dish_id)
+        if dish is None:
+            return jsonify("Dish not found"), 404        
+        order.order_dishes.remove(dish)
+        db.session.commit()
 
-    return jsonify("Usunięto " + dish.name + "z zamowienia ")
+        restaurant = Restaurant.query.get(dish.restaurant_id)
+        if restaurant is None:
+            return jsonify("Restaurant not found"), 404
 
+        stmt = select(order_dishes.columns.price).where(order_dishes.columns.order_id==order_id)
+        results = db.session.execute(stmt).fetchall()   
 
-@views_order.route('/complete_order/<uuid:order_id>', methods=['POST'])
+        summary_cost=0.0
+        for result in results:
+            summary_cost += result[0]
+        
+        order.dishes_cost = summary_cost
+        if restaurant.is_delivery:
+            if summary_cost >= restaurant.min_order_cost_free_delivery and restaurant.min_order_cost_free_delivery is not None:
+                order.delivery_cost = 0.0
+            else:
+                order.delivery_cost = restaurant.delivery_cost
+        else:
+            order.delivery_cost=0.0
+        order.total_cost = order.dishes_cost + order.delivery_cost
+
+        db.session.commit()
+
+        return jsonify("It was deleted " + dish.name + "from order " + str(order_id))
+    except:
+        return jsonify("Failure in deleting a dish from an order"), 500
+
+@views_order.route('/<uuid:order_id>/restaurants/<uuid:restaurant_id>/accept-basket', methods=['GET'])
+@jwt_required()
+def accept_basket_of_order(order_id, restaurant_id):
+    try:
+        order = Order.query.get(order_id)
+        if order is None:
+            return jsonify("Order not found"), 404
+        restaurant = Restaurant.query.get(restaurant_id)
+        if restaurant is None:
+            return jsonify("Restaurant not found"), 404 
+        if restaurant.is_delivery:
+            if order.dishes_cost >= restaurant.min_order_cost:
+                return jsonify("Basket was accepted!")
+            else:
+                return jsonify("Summary dishes cost is too low. Minimum order cost for this restaurant is equal " + restaurant.min_order_cost), 600
+        return jsonify("Basket was accepted")
+    except Exception as err:
+        print(err)
+        return jsonify("Failure in calculating a dishes cost in an order"), 500
+
+@views_order.route('/<uuid:order_id>/complete', methods=['POST'])
+@jwt_required()
 def complete_order(order_id):
-    order = Order.query.get(order_id)
-    restaurant = Restaurant.query.get(order.restaurant_id)
 
-    order.delivery_address = request.json['delivery_address']
-    order.delivery_cost = restaurant.delivery_cost
+    delivery_address = request.json['delivery_address']
+    payment_form = request.json['payment_form']
 
-    stmt = select(order_dishes.columns.price).where(order_dishes.columns.order_id==order_id)
-    results = db.session.execute(stmt).fetchall()
+    try:
+        order = Order.query.get(order_id)
+        if order is None:
+            return jsonify("Order not found"), 404
+        restaurant = Restaurant.query.get(order.restaurant_id)
+        if restaurant is None:
+            return jsonify("Restaurant not found"), 404
 
-    summary_cost=0.0
-    for result in results:
-        summary_cost += result[0]
+        order.delivery_address = delivery_address
+        order.payment_form = payment_form
+        order.is_completed = True
+        order.order_date = datetime.utcnow()
 
-    order.dishes_cost = summary_cost
-    order.total_cost = order.dishes_cost + order.delivery_cost
-    order.payment_form = request.json['payment_form']
-    order.is_completed = True
-    order.order_date = datetime.utcnow()
+        db.session.commit()
 
-    db.session.commit()
-
-    return order_schema.jsonify(order)
+        return order_schema.jsonify(order)
+    except:
+        return jsonify("Failure in completing an order"), 500
 
 
-@views_order.route('/all_orders', methods=['GET'])
+@views_order.route('/', methods=['GET'])
 def get_orders():
     all_orders = Order.query.all()
     result = orders_schema.dump(all_orders)
     return jsonify(result)
 
-@views_order.route('/order/<id>', methods=['GET'])
-def get_order(id):
-    order = Order.query.get(id)
+@views_order.route('/<uuid:order_id>', methods=['GET'])
+@jwt_required()
+def get_order(order_id):
+    order = Order.query.get(order_id)
+    if order is None:
+        return jsonify("Order not found"), 404
     return order_schema.jsonify(order)
 
-@views_order.route('/order/<id>', methods=['PUT'])
-def update_order(id):
-
-    order = Order.query.get(id)
+@views_order.route('/<uuid:order_id>', methods=['PUT'])
+@jwt_required()
+def update_order(order_id):
 
     delivery = request.json['delivery']
     delivery_cost = request.json['delivery_cost']
@@ -119,22 +264,37 @@ def update_order(id):
     total_cost = request.json['total_cost']
     user_id = request.json['user_id']
 
-    order.delivery = delivery
-    order.delivery_cost = delivery_cost
-    order.dishes_cost = dishes_cost
-    order.is_completed = is_completed
-    order.order_date = order.order_date
-    order.payment_form = payment_form
-    order.total_cost = total_cost
-    order.user_id = user_id
+    try:
+        order = Order.query.get(order_id)
 
-    db.session.commit()
+        if order is None:
+            return jsonify("Order not found"), 404
 
-    return order_schema.jsonify(order)
+        order.delivery = delivery
+        order.delivery_cost = delivery_cost
+        order.dishes_cost = dishes_cost
+        order.is_completed = is_completed
+        order.order_date = order.order_date
+        order.payment_form = payment_form
+        order.total_cost = total_cost
+        order.user_id = user_id
 
-@views_order.route('/order/<id>', methods=["DELETE"])
-def delete_order(id):
-    order = Order.query.get(id)
-    db.session.delete(order)
-    db.session.commit()
-    return jsonify("Order " + id + " was succesfully deleted!")
+        db.session.commit()
+
+        return order_schema.jsonify(order)
+    except:
+        return jsonify("Failure in modifying an order"), 422
+
+@views_order.route('/<uuid:order_id>', methods=["DELETE"])
+@jwt_required()
+def delete_order(order_id):
+    try:
+        order = Order.query.get(order_id)
+        if order is None:
+            return jsonify("Order not found"), 404
+        db.session.delete(order)
+        db.session.commit()
+        return jsonify("Order " + str(order_id) + " was succesfully deleted!")
+    except:
+        return jsonify("Failure in deleting an order"), 500
+

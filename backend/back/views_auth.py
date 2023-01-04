@@ -72,7 +72,7 @@ def register():
         db.session.commit()
         return jsonify("A new user " + email + " was created!"), 201
 
-    return jsonify("Only POST request is allowed"), 500
+    return jsonify("Register error"), 500
     
     
     

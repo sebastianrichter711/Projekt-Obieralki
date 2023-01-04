@@ -8,7 +8,8 @@ from .schemas import dish_schema, dishes_schema
 
 views_dish = Blueprint('views_dish', __name__)
 
-@views_dish.route('/dish', methods=['POST'])
+@views_dish.route('/', methods=['POST'])
+@jwt_required()
 def add_dish():
     description = request.json['description']
     dish_subtype = request.json['dish_subtype']
@@ -20,42 +21,52 @@ def add_dish():
     restaurant_id = request.json['restaurant_id']
     sauces = request.json['sauces']
 
-    new_dish = Dish(description,dish_subtype,dish_type,meat_types,name,pizza_diameter,price,restaurant_id,sauces)
+    try:
+        new_dish = Dish(description,dish_subtype,dish_type,meat_types,name,pizza_diameter,price,restaurant_id,sauces)
 
-    db.session.add(new_dish)
-    db.session.commit()
+        db.session.add(new_dish)
+        db.session.commit()
 
-    return dish_schema.jsonify(new_dish)
+        return dish_schema.jsonify(new_dish), 201
+    except:
+        return jsonify("Creating a dish is not successful!"), 422
 
-@views_dish.route('/all_dishes', methods=['GET'])
+@views_dish.route('/', methods=['GET'])
 def get_dishes():
     all_dishes = Dish.query.all()
+    if len(all_dishes) == 0:
+        return jsonify("Not found dishes"), 404
     result = dishes_schema.dump(all_dishes)
     return jsonify(result)
 
-@views_dish.route('/dish/<id>', methods=['GET'])
-def get_dish(id):
-    dish = Dish.query.get(id)
+@views_dish.route('/<uuid:dish_id>', methods=['GET'])
+def get_dish(dish_id):
+    dish = Dish.query.get(dish_id)
+    if dish is None:
+        return jsonify("Dish " + (dish_id) + " not found"), 404
     return dish_schema.jsonify(dish)
 
-@views_dish.route('/all_dishes_from_restaurant/<id>', methods=['GET'])
-def get_all_dishes_from_restaurant(id):
-    all_dishes = Dish.query.filter(Dish.restaurant_id==id)
+@views_dish.route('/restaurants/<uuid:restaurant_id>', methods=['GET'])
+def get_all_dishes_from_restaurant(restaurant_id):
+    all_dishes = Dish.query.filter(Dish.restaurant_id==restaurant_id)
+    if len(all_dishes) == 0:
+        return jsonify("Not found dishes from a restaurant " + str(restaurant_id)), 404
     result = dishes_schema.dump(all_dishes)
     return jsonify(result)
 
-@views_dish.route('/all_dishes_from_restaurant_by_name/<id>', methods=['GET'])
-def get_all_dishes_from_restaurant_by_name(id):
+@views_dish.route('/restaurants/<uuid:restaurant_id>/by-name', methods=['GET'])
+def get_all_dishes_from_restaurant_by_name(restaurant_id):
     dish_name=request.json['name']
-    name_to_request =  '%' + dish_name + '%'
-    all_dishes = Dish.query.filter(Dish.restaurant_id==id, Dish.name.like(name_to_request))
+    name_to_request = '%' + dish_name + '%'
+    all_dishes = Dish.query.filter(Dish.restaurant_id==restaurant_id, Dish.name.like(name_to_request))
+    if len(all_dishes) == 0:
+        return jsonify("Not found dishes by name from restaurant " + str(restaurant_id)), 404
     result = dishes_schema.dump(all_dishes)
     return jsonify(result)
 
-@views_dish.route('/dish/<id>', methods=['PUT'])
-def update_dish(id):
-
-    dish = Dish.query.get(id)
+@views_dish.route('/<uuid:dish_id>', methods=['PUT'])
+@jwt_required()
+def update_dish(dish_id):
 
     description = request.json['description']
     dish_subtype = request.json['dish_subtype']
@@ -67,23 +78,38 @@ def update_dish(id):
     restaurant_id = request.json['restaurant_id']
     sauces = request.json['sauces']
 
-    dish.description = description
-    dish.dish_subtype = dish_subtype
-    dish.dish_type = dish_type
-    dish.meat_types = meat_types
-    dish.name = name
-    dish.pizza_diameter = pizza_diameter
-    dish.price = price
-    dish.restaurant_id = restaurant_id
-    dish.sauces = sauces
+    try:
+
+        dish = Dish.query.get(dish_id)
+        if dish is None:
+            return jsonify("Dish " + str(dish_id) + "not_found"), 404
+
+        dish.description = description
+        dish.dish_subtype = dish_subtype
+        dish.dish_type = dish_type
+        dish.meat_types = meat_types
+        dish.name = name
+        dish.pizza_diameter = pizza_diameter
+        dish.price = price
+        dish.restaurant_id = restaurant_id
+        dish.sauces = sauces
     
-    db.session.commit()
+        db.session.commit()
 
-    return dish_schema.jsonify(dish)
+        return dish_schema.jsonify(dish)
 
-@views_dish.route('/dish/<id>', methods=["DELETE"])
-def delete_dish(id):
-    dish = Dish.query.get(id)
-    db.session.delete(dish)
-    db.session.commit()
-    return jsonify("Dish " + id + " was succesfully deleted!")
+    except:
+        return jsonify("Updating a dish wasn't ended successfully!"), 422
+
+@views_dish.route('/<uuid:dish_id>', methods=["DELETE"])
+@jwt_required()
+def delete_dish(dish_id):
+    try:
+        dish = Dish.query.get(dish_id)
+        if dish is None:
+            return jsonify("Dish " + str(dish_id) + "not_found"), 404
+        db.session.delete(dish)
+        db.session.commit()
+        return jsonify("Dish " + str(dish_id) + " was succesfully deleted!")
+    except:
+        return jsonify("Deleting a dish wasn't ended successfully!"), 500
