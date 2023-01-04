@@ -151,7 +151,7 @@ def update_count_of_dish(order_id, dish_id):
         return jsonify("Failure in updating an order"), 422
 
 @views_order.route('/<uuid:order_id>/dishes/<uuid:dish_id>', methods=['DELETE'])
-@jwt_required()
+#@jwt_required()
 def delete_dish_from_order(order_id, dish_id):
     try:
         order = Order.query.get(order_id)
@@ -162,6 +162,11 @@ def delete_dish_from_order(order_id, dish_id):
             return jsonify("Dish not found"), 404        
         order.order_dishes.remove(dish)
         db.session.commit()
+
+        if len(order.order_dishes)==0:
+            db.session.delete(order)
+            db.session.commit()
+            return jsonify("Order was deleted")
 
         restaurant = Restaurant.query.get(dish.restaurant_id)
         if restaurant is None:
@@ -240,6 +245,8 @@ def complete_order(order_id):
 @views_order.route('/', methods=['GET'])
 def get_orders():
     all_orders = Order.query.all()
+    if len(all_orders)==0:
+        return jsonify("Not found orders"), 404
     result = orders_schema.dump(all_orders)
     return jsonify(result)
 
