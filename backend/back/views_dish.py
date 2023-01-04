@@ -4,7 +4,7 @@ from datetime import datetime
 from .models import *
 from . import db
 from .schemas import dish_schema, dishes_schema
-
+from flask_jwt_extended import get_jwt, jwt_required
 
 views_dish = Blueprint('views_dish', __name__)
 

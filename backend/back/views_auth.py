@@ -30,7 +30,8 @@ def login():
     if not user.verify_password(password):
         return jsonify("Podane dane uwierzytelniające są nieprawidłowe!"), 403
 
-    access_token = create_access_token(identity="example_user")
+    additional_claims = {"user_id": str(user.id), "role": str(user.role)}
+    access_token = create_access_token(identity="identity_user", additional_claims=additional_claims)
 
     user.date_of_last_login = datetime.datetime.utcnow()
     db.session.commit()

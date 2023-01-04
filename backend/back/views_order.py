@@ -7,7 +7,7 @@ from .schemas import order_schema, orders_schema
 import uuid
 from sqlalchemy import select, update, delete
 import sys
-
+from flask_jwt_extended import get_jwt, jwt_required
 
 views_order = Blueprint('views_order', __name__)
 

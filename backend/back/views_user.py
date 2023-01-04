@@ -4,6 +4,8 @@ from datetime import datetime
 from .models import *
 from . import db
 from .schemas import user_schema, users_schema
+from flask_jwt_extended import get_jwt, jwt_required
+
 
 views_user = Blueprint('views_user', __name__)
 
