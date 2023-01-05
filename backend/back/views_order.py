@@ -30,14 +30,17 @@ def get_users_orders_uncompleted(user_id):
     return jsonify(result)
 
 
-@views_order.route('/restaurants/<uuid:restaurant_id>/users/<uuid:user_id>', methods=['POST'])
+@views_order.route('/restaurants/<uuid:restaurant_id>', methods=['POST'])
 @jwt_required()
-def add_dish_to_order(restaurant_id, user_id):
+def add_dish_to_order(restaurant_id):
     selected_dish_id = uuid.UUID(request.json['dish_id'])
     dish = Dish.query.get(selected_dish_id)
     if dish is None:
         return jsonify("Dish not found"), 404
     count = request.json['count']
+    user_id = get_jwt()["id"]
+    if user_id is None:
+        return jsonify("User is not authorized"), 401
     order = Order.query.filter(Order.restaurant_id==restaurant_id, Order.user_id==user_id,Order.is_completed==False).first()
 
     try:
@@ -107,9 +110,9 @@ def add_dish_to_order(restaurant_id, user_id):
         print(type(err))
         return jsonify("Failure in adding a dish to an order"), 422
 
-@views_order.route('/<uuid:order_id>/dishes/<uuid:dish_id>', methods=['POST'])
+@views_order.route('/<uuid:order_id>/dishes/<uuid:dish_id>', methods=['PATCH'])
 @jwt_required()
-def update_count_of_dish(order_id, dish_id):
+def update_dish_in_order(order_id, dish_id):
     count = request.json['count']
 
     try:
@@ -226,9 +229,6 @@ def complete_order(order_id):
         order = Order.query.get(order_id)
         if order is None:
             return jsonify("Order not found"), 404
-        restaurant = Restaurant.query.get(order.restaurant_id)
-        if restaurant is None:
-            return jsonify("Restaurant not found"), 404
 
         order.delivery_address = delivery_address
         order.payment_form = payment_form
