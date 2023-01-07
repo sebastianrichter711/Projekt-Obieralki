@@ -8,7 +8,7 @@ from flask_jwt_extended import create_access_token, get_jwt, jwt_required
 
 views_restaurant = Blueprint('views_restaurant', __name__)
 
-@views_restaurant.route('/', methods=['POST'])
+@views_restaurant.route('', methods=['POST'])
 @jwt_required()
 def add_restaurant():
     address = request.json['address']
@@ -38,7 +38,7 @@ def add_restaurant():
     except:
         return jsonify("Error in adding a restaurant"), 422
 
-@views_restaurant.route('/', methods=['GET'])
+@views_restaurant.route('', methods=['GET'])
 def get_restaurants():
     all_restaurants = Restaurant.query.all()
     if len(all_restaurants)==0:

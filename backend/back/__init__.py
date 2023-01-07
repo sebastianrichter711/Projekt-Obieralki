@@ -6,6 +6,7 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
+from flask_cors import CORS
 
 conn="postgresql://{0}:{1}@{2}:{3}/{4}".format('postgres','postgres','localhost','5432','twojejedzenie3x')
 db = SQLAlchemy()
@@ -14,6 +15,7 @@ admin=Admin()
 APP_SECRET_KEY = 'fTjWnZr4u7x!A%D*G-JaNdRgUkXp2s5v'
 ACCESS_EXPIRES = timedelta(hours=1)
 jwt=JWTManager()
+cors = CORS()
 
 def create_app():
     app = Flask(__name__)
@@ -25,6 +27,7 @@ def create_app():
     db.init_app(app)
     ma=Marshmallow(app)
     jwt=JWTManager(app)
+    cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     from .views_auth import views_auth
     from .views_restaurant import views_restaurant

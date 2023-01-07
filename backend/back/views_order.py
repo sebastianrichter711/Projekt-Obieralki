@@ -154,7 +154,7 @@ def update_dish_in_order(order_id, dish_id):
         return jsonify("Failure in updating an order"), 422
 
 @views_order.route('/<uuid:order_id>/dishes/<uuid:dish_id>', methods=['DELETE'])
-#@jwt_required()
+@jwt_required()
 def delete_dish_from_order(order_id, dish_id):
     try:
         order = Order.query.get(order_id)
@@ -242,7 +242,7 @@ def complete_order(order_id):
         return jsonify("Failure in completing an order"), 500
 
 
-@views_order.route('/', methods=['GET'])
+@views_order.route('', methods=['GET'])
 def get_orders():
     all_orders = Order.query.all()
     if len(all_orders)==0:

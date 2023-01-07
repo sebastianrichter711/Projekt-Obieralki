@@ -36,7 +36,7 @@ def login():
     user.date_of_last_login = datetime.datetime.utcnow()
     db.session.commit()
 
-    return jsonify({"token":access_token}), 200
+    return jsonify({"accessToken": access_token}), 200
 
 @views_auth.route('/logout', methods=['DELETE'])
 @jwt_required()
@@ -55,7 +55,7 @@ def logout():
 def register():
     email = request.json['email']
     password = request.json['password']
-    password_again = request.json['password_again']
+    password_again = request.json['passwordAgain']
 
     user = User.query.filter_by(email=email).first()
     if user:

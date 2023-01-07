@@ -8,7 +8,7 @@ from flask_jwt_extended import get_jwt, jwt_required
 
 views_dish = Blueprint('views_dish', __name__)
 
-@views_dish.route('/', methods=['POST'])
+@views_dish.route('', methods=['POST'])
 @jwt_required()
 def add_dish():
     description = request.json['description']
@@ -31,7 +31,7 @@ def add_dish():
     except:
         return jsonify("Creating a dish is not successful!"), 422
 
-@views_dish.route('/', methods=['GET'])
+@views_dish.route('', methods=['GET'])
 def get_dishes():
     all_dishes = Dish.query.all()
     if len(all_dishes) == 0:

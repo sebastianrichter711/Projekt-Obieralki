@@ -6,7 +6,6 @@ from . import db
 from .schemas import user_schema, users_schema
 from flask_jwt_extended import get_jwt, jwt_required
 
-
 views_user = Blueprint('views_user', __name__)
 
 # @views_user.route('/user', methods=['POST'])
@@ -33,7 +32,7 @@ views_user = Blueprint('views_user', __name__)
 
 #     return user_schema.jsonify(new_user)
 
-@views_user.route('/', methods=['GET'])
+@views_user.route('', methods=['GET'])
 @jwt_required()
 def get_users():
     all_users = User.query.all()
