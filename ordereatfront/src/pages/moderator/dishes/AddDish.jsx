@@ -46,13 +46,13 @@ export default function AddDish() {
   const navigate = useNavigate();
   const initialFormData = Object.freeze({
     description: "",
-    dishSubtype: "",
-    dishType: "",
-    meatTypes: [],
+    dish_subtype: "",
+    dish_type: "",
+    meat_types: [],
     name: "",
-    pizzaDiameter: "",
+    pizza_diameter: "",
     price: "",
-    restaurantId: "",
+    restaurant_id: "",
     sauces: [],
   });
 
@@ -60,14 +60,14 @@ export default function AddDish() {
   const [dishType, setDishType] = useState("");
 
   const dishTypeOptions = [
-    { value: 1, label: "Przystawki" },
-    { value: 2, label: "Zupy" },
-    { value: 3, label: "Dania główne" },
-    { value: 4, label: "Desery" },
-    { value: 5, label: "Pizza" },
-    { value: 6, label: "Kebab" },
-    { value: 7, label: "Dodatki" },
-    { value: 8, label: "Napoje" },
+    { value: "starter", label: "Przystawki" },
+    { value: "soup", label: "Zupy" },
+    { value: "main_course", label: "Dania główne" },
+    { value: "dessert", label: "Desery" },
+    { value: "pizza", label: "Pizza" },
+    { value: "kebab", label: "Kebab" },
+    { value: "additives", label: "Dodatki" },
+    { value: "drinks", label: "Napoje" },
   ];
 
   const handleChange = (e) => {
@@ -91,13 +91,13 @@ export default function AddDish() {
     e.preventDefault();
     let formData = new FormData();
     formData.append("description", data.description);
-    formData.append("dishSubtype", data.dishSubtype);
-    formData.append("dishType", dishType);
-    formData.append("meatTypes", []);
+    formData.append("dish_subtype", data.dish_subtype);
+    formData.append("dish_type", dishType);
+    formData.append("meat_types", []);
     formData.append("name", data.name);
-    formData.append("pizzaDiameter", data.pizzaDiameter);
+    formData.append("pizza_diameter", data.pizza_diameter);
     formData.append("price", data.price);
-    formData.append("restaurantId", data.restaurantId);
+    formData.append("restaurant_id", data.restaurant_id);
     formData.append("sauces", []);
     console.log(formData);
     api.post("/dishes", formData);
@@ -131,10 +131,10 @@ export default function AddDish() {
                 variant="outlined"
                 required
                 fullWidth
-                id="dishSubtype"
+                id="dish_subtype"
                 label="Subkategoria dania"
-                name="dishSubtype"
-                autoComplete="dishSubtype"
+                name="dish_subtype"
+                autoComplete="dish_subtype"
                 onChange={handleChange}
               />
               <Select
@@ -159,10 +159,10 @@ export default function AddDish() {
               <TextField
                 variant="outlined"
                 fullWidth
-                id="pizzaDiameter"
+                id="pizza_diameter"
                 label="Średnica pizzy"
-                name="pizzaDiameter"
-                autoComplete="pizzaDiameter"
+                name="pizza_diameter"
+                autoComplete="pizza_diameter"
                 onChange={handleChange}
               />
               <TextField
@@ -179,10 +179,10 @@ export default function AddDish() {
                 variant="outlined"
                 required
                 fullWidth
-                id="restaurantId"
+                id="restaurant_id"
                 label="Restauracja (ID)"
-                name="restaurantId"
-                autoComplete="restaurantId"
+                name="restaurant_id"
+                autoComplete="restaurant_id"
                 onChange={handleChange}
               />
             </Grid>

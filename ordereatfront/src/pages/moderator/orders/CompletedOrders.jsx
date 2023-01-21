@@ -26,19 +26,11 @@ export default function CompletedOrders() {
   console.log(user.id);
 
   useEffect(() => {
-    api
-      .get("/orders/completed", {
-        headers: {
-          Authorization:
-            "Bearer " +
-            JSON.parse(localStorage.getItem("authTokens")).accessToken,
-        },
-      })
-      .then((res) => {
-        const allOrders = res.data;
-        setOrders({ orders: allOrders });
-        console.log(res.data);
-      });
+    api.get("/orders/users/" + user.id + "/completed").then((res) => {
+      const allOrders = res.data;
+      setOrders({ orders: allOrders });
+      console.log(res.data);
+    });
   }, [setOrders]);
 
   if (!orders.orders || orders.orders.length === 0)
@@ -64,7 +56,7 @@ export default function CompletedOrders() {
                       </TableCell>
                       <TableCell align="left">
                         <Link color="textPrimary" href={"/orders/" + order.id}>
-                          {order.orderDate}
+                          {order.order_date}
                         </Link>
                       </TableCell>
                       <TableCell align="left"></TableCell>

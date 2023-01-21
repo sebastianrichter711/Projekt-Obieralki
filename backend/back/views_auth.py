@@ -10,8 +10,14 @@ from flask_jwt_extended import create_access_token, get_jwt, jwt_required
 
 views_auth = Blueprint('views_auth', __name__)
 
-#@views_auth.route('/forgot-password', methods=['POST'])
-#def forgot_password():
+@views_auth.route('/forgot-password', methods=['POST'])
+def forgot_password():
+    user = User.query.filter(User.email==request.json["email"]).first()
+    if user is None:
+        return jsonify("User with email " + request.json["email"] + "not_found"), 404
+    user.pass_reset_token = create_access_token(identity="identity_user")
+    db.session.commit()
+    return jsonify(user.pass_reset_token)
 
 @jwt.token_in_blocklist_loader
 def check_if_token_revoked(jwt_header, jwt_payload: dict) -> bool:
@@ -38,7 +44,7 @@ def login():
 
     return jsonify({"accessToken": access_token}), 200
 
-@views_auth.route('/logout', methods=['DELETE'])
+@views_auth.route('/logout', methods=['POST'])
 @jwt_required()
 def logout():
     jti = get_jwt()["jti"]
@@ -48,14 +54,36 @@ def logout():
     db.session.commit()
     return jsonify(msg="JWT revoked")
 
-# @views_auth.route('/reset-password', methods=['POST'])
-# def reset_password():
+@views_auth.route('/reset-password', methods=['POST'])
+def reset_password():
+    user = User.query.filter(User.pass_reset_token==request.json["token"]).first()
+    if user is None:
+        return jsonify("User not found"), 404
+
+    password = request.json["password"]
+    password_again = request.json["password_again"]
+
+    if password != password_again:
+        return jsonify('Passwords don\'t match.'), 400
+    elif len(password) < 8:
+        return jsonify('Password must be at least 8 characters.'),400
+    user.pass_reset_token = ""
+    user.password = generate_password_hash(password, method='sha256')
+    db.session.commit()
+    return jsonify("Password successfully reset.")
 
 @views_auth.route('/register', methods=['POST'])
 def register():
+    active = request.json['active']
     email = request.json['email']
     password = request.json['password']
-    password_again = request.json['passwordAgain']
+    password_again = request.json['password_again']
+    role = request.json['role']
+    authorize_date = request.json['authorize_date']
+    end_authorize_date = request.json['end_authorize_date']
+
+    print(type(authorize_date))
+    print(type(end_authorize_date))
 
     user = User.query.filter_by(email=email).first()
     if user:
@@ -68,9 +96,10 @@ def register():
         return jsonify('Password must be at least 8 characters.'),400
     else:
         new_user = User(active=True, date_created=datetime.datetime.utcnow(), email=email, password=generate_password_hash(
-            password, method='sha256'),role='user')
+            password, method='sha256'),role=role, authorize_date=authorize_date, end_authorize_date=end_authorize_date)
         db.session.add(new_user)
         db.session.commit()
+        print(new_user)
         return jsonify("A new user " + email + " was created!"), 201
 
     return jsonify("Register error"), 500

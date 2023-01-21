@@ -9,7 +9,7 @@ const getRestaurantsByNameOrLocation = (value) => {
 };
 
 const getRestaurant = (id) => {
-  return api.get("/restaurants/" + id);
+  return api.get("/restaurants/one/" + id);
 };
 
 const getRestaurants = (i) => {

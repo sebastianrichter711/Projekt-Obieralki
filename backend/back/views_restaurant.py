@@ -9,13 +9,12 @@ from flask_jwt_extended import create_access_token, get_jwt, jwt_required
 views_restaurant = Blueprint('views_restaurant', __name__)
 
 @views_restaurant.route('', methods=['POST'])
-@jwt_required()
 def add_restaurant():
     address = request.json['address']
     delivery_cost = request.json['delivery_cost']
     description = request.json['description']
-    discounts = request.json['discounts']
-    dishes = request.json['dishes']
+    discounts = list(request.json['discounts'])
+    dishes = list(request.json['dishes'])
     is_delivery = request.json['is_delivery']
     kitchen_type = request.json['kitchen_type']
     logo = request.json['logo']
@@ -27,6 +26,11 @@ def add_restaurant():
     moderator_id = request.json['moderator_id']
     orders = []
 
+    if is_delivery == "on":
+        is_delivery = True
+    else:
+        is_delivery = False
+
     try:
         new_restaurant = Restaurant(address,delivery_cost,description,discounts,dishes,is_delivery,kitchen_type,logo,min_order_cost,
         min_order_cost_free_delivery,name,phone,waiting_time_for_delivery,moderator_id,orders)
@@ -35,10 +39,11 @@ def add_restaurant():
         db.session.commit()
 
         return restaurant_schema.jsonify(new_restaurant), 201
-    except:
+    except Exception as e:
+        print(e)
         return jsonify("Error in adding a restaurant"), 422
 
-@views_restaurant.route('', methods=['GET'])
+@views_restaurant.route('/', methods=['GET'])
 def get_restaurants():
     all_restaurants = Restaurant.query.all()
     if len(all_restaurants)==0:
@@ -77,7 +82,7 @@ def get_all_restaurants_by_name_or_location(location):
         result_of_search = restaurants_schema.dump(results)
         return jsonify(result_of_search)
 
-@views_restaurant.route('/<uuid:restaurant_id>', methods=['GET'])
+@views_restaurant.route('/one/<uuid:restaurant_id>', methods=['GET'])
 def get_restaurant(restaurant_id):
     restaurant = Restaurant.query.get(restaurant_id)
     if restaurant is None:
@@ -85,14 +90,11 @@ def get_restaurant(restaurant_id):
     return restaurant_schema.jsonify(restaurant)
 
 @views_restaurant.route('/<uuid:restaurant_id>', methods=['PUT'])
-@jwt_required()
 def update_restaurant(restaurant_id):
 
     address = request.json['address']
     delivery_cost = request.json['delivery_cost']
     description = request.json['description']
-    discounts = request.json['discounts']
-    dishes = request.json['dishes']
     is_delivery = request.json['is_delivery']
     kitchen_type = request.json['kitchen_type']
     logo = request.json['logo']
@@ -111,8 +113,8 @@ def update_restaurant(restaurant_id):
         restaurant.address = address
         restaurant.delivery_cost = delivery_cost
         restaurant.description = description
-        restaurant.discounts = discounts
-        restaurant.dishes = dishes
+        restaurant.discounts = restaurant.discounts
+        restaurant.dishes = restaurant.dishes
         restaurant.is_delivery = is_delivery
         restaurant.kitchen_type = kitchen_type
         restaurant.logo = logo
@@ -126,12 +128,12 @@ def update_restaurant(restaurant_id):
         db.session.commit()
 
         return restaurant_schema.jsonify(restaurant)
-    except:
+    except Exception as e:
+        print(e)
         return jsonify("Failure in modifying a restaurant"), 422
 
 
 @views_restaurant.route('/<uuid:restaurant_id>', methods=["DELETE"])
-@jwt_required()
 def delete_restaurant(restaurant_id):
     try:
         restaurant = Restaurant.query.get(restaurant_id)
@@ -140,5 +142,6 @@ def delete_restaurant(restaurant_id):
         db.session.delete(restaurant)
         db.session.commit()
         return jsonify("Restaurant " + str(restaurant_id) + " was succesfully deleted!")
-    except:
+    except Exception as e:
+        print(e)
         return jsonify("Failure in deleting a restaurant"), 422

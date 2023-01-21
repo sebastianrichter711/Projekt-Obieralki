@@ -6,7 +6,9 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
+import datetime
 from flask_cors import CORS
+from werkzeug.security import generate_password_hash
 
 conn="postgresql://{0}:{1}@{2}:{3}/{4}".format('postgres','postgres','localhost','5432','twojejedzenie3x')
 db = SQLAlchemy()
@@ -50,18 +52,13 @@ def create_app():
     admin.add_view(ModelView(Dish,db.session))
     admin.add_view(ModelView(Order,db.session))
 
-    # with app.app_context():
-    #     db.drop_all()
-    #     db.create_all()
+    with app.app_context():
+        admins = User.query.filter(User.role=='admin')
+        if admins.count()==0:
+            admin = User(active=True, date_created=datetime.datetime.utcnow(), email="admin@admin.pl", password=generate_password_hash(
+                "admin", method='sha256'),role="admin",authorize_date=datetime.datetime.utcnow(), end_authorize_date=datetime.datetime(2050,1,1,23,59,59))
 
-    #create_database(app)
-
-    # login_manager = LoginManager()
-    # login_manager.login_view = 'auth.login'
-    # login_manager.init_app(app)
-
-    # @login_manager.user_loader
-    # def load_user(id):
-    #     return User.query.get(int(id))
+            db.session.add(admin)
+            db.session.commit()
 
     return app

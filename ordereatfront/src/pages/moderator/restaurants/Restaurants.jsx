@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Container } from "@mui/material";
 import { Link } from "@mui/material";
+import { Box } from "@mui/material";
+
 import { Button } from "@mui/material";
 import { Paper } from "@mui/material";
 import { Table } from "@mui/material";
@@ -32,7 +34,18 @@ export default function Restaurants() {
   }, [setRestaurants]);
 
   if (!restaurants.restaurants || restaurants.restaurants.length === 0)
-    return <p>Nie znaleziono restauracji</p>;
+    return (
+      <div>
+        <p style={{ textAlign: "center", fontWeight: "bold" }}>
+          Nie znaleziono restauracji
+        </p>
+        <Box textAlign="center">
+          <Button href={"/restaurants/add"} variant="contained" color="primary">
+            Dodaj restaurację
+          </Button>
+        </Box>
+      </div>
+    );
   return (
     <React.Fragment>
       <Container component="main">

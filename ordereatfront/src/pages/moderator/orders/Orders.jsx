@@ -33,7 +33,11 @@ export default function Orders() {
   }, [setOrders]);
 
   if (!orders.orders || orders.orders.length === 0)
-    return <p>Nie znaleziono zamówień</p>;
+    return (
+      <p style={{ textAlign: "center", fontWeight: "bold" }}>
+        Nie znaleziono zamówień
+      </p>
+    );
   return (
     <React.Fragment>
       <Container component="main">
@@ -56,7 +60,7 @@ export default function Orders() {
                       </TableCell>
                       <TableCell align="left">
                         <Link color="textPrimary" href={"/orders/" + order.id}>
-                          {order.orderDate}
+                          {order.order_date}
                         </Link>
                       </TableCell>
                       <TableCell align="left">

@@ -23,7 +23,7 @@ const Register = () => {
         new Date("1970-01-01T00:00:00"),
         password,
         passwordAgain,
-        2
+        "user"
       ).then(
         (response) => {
           // check for token and user already exists with 200

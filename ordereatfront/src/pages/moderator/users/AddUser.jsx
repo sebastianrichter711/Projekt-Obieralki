@@ -47,12 +47,12 @@ export default function AddUser() {
 
   const initialFormData = Object.freeze({
     active: "",
-    authorizeDate: "",
+    authorize_date: "",
     email: "",
-    endAuthorizeDate: "",
+    end_authorize_date: "",
     role: "",
     password: "",
-    passwordAgain: "",
+    password_again: "",
   });
 
   const [data, updateFormData] = useState(initialFormData);
@@ -98,21 +98,21 @@ export default function AddUser() {
   };
 
   const roleOptions = [
-    { value: 0, label: "Admin" },
-    { value: 1, label: "Moderator" },
-    { value: 2, label: "User" },
+    { value: "admin", label: "Admin" },
+    { value: "moderator", label: "Moderator" },
+    { value: "user", label: "User" },
   ];
 
   const handleSubmit = (e) => {
     e.preventDefault();
     let formData = new FormData();
     formData.append("active", checked);
-    formData.append("authorizeDate", data.authorizeDate);
+    formData.append("authorize_date", data.authorize_date);
     formData.append("email", data.email);
-    formData.append("endAuthorizeDate", data.endAuthorizeDate);
+    formData.append("end_authorize_date", data.end_authorize_date);
     formData.append("role", role);
     formData.append("password", data.password);
-    formData.append("passwordAgain", data.passwordAgain);
+    formData.append("password_again", data.password_again);
     console.log(formData);
     api.post("/auth/register", formData);
     navigate("/admin");
@@ -137,10 +137,10 @@ export default function AddUser() {
               <TextField
                 variant="outlined"
                 fullWidth
-                id="authorizeDate"
+                id="authorize_date"
                 label="Data nadania uprawnień"
-                name="authorizeDate"
-                autoComplete="authorizeDate"
+                name="authorize_date"
+                autoComplete="authorize_date"
                 onChange={handleChange}
                 multiline
                 rows={1}
@@ -164,10 +164,10 @@ export default function AddUser() {
               <TextField
                 variant="outlined"
                 fullWidth
-                id="endAuthorizeDate"
+                id="end_authorize_date"
                 label="Data wygaśnięcia uprawnień"
-                name="endAuthorizeDate"
-                autoComplete="endAuthorizeDate"
+                name="end_authorize_date"
+                autoComplete="end_authorize_date"
                 onChange={handleChange}
                 multiline
                 rows={1}
@@ -195,11 +195,11 @@ export default function AddUser() {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                id="passwordAgain"
+                id="password_again"
                 label="Powtórz hasło"
-                name="passwordAgain"
+                name="password_again"
                 type="password"
-                autoComplete="passwordAgain"
+                autoComplete="password_again"
                 onChange={handleChange}
               />
             </Grid>

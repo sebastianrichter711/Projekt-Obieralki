@@ -30,17 +30,17 @@ const Checkout = () => {
   const dishes = useSelector((state) => state.cart.cartItems);
   var restId;
   if (dishes.length === 0) restId = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeee";
-  else restId = dishes[0].restaurantId;
+  else restId = dishes[0].restaurant_id;
   console.log(dishes);
-  let restaurantId = restId;
+  let restaurant_id = restId;
   dishesCost = Math.round(dishesCost * 100) / 100;
 
   var deliveryCost = 0.0;
 
   const paymentOptions = [
-    { value: 1, label: "Karta płatnicza" },
-    { value: 2, label: "BLIK" },
-    { value: 3, label: "Voucher" },
+    { value: "card", label: "Karta płatnicza" },
+    { value: "blik", label: "BLIK" },
+    { value: "voucher", label: "Voucher" },
   ];
 
   const clearBasket = () => {
@@ -48,20 +48,20 @@ const Checkout = () => {
   };
 
   useEffect(() => {
-    RestaurantService.getRestaurant(restaurantId).then((res) => {
+    RestaurantService.getRestaurant(restaurant_id).then((res) => {
       const gotRestaurant = res.data;
       setRestaurant(gotRestaurant);
       console.log(res.data);
     });
   }, [setRestaurant]);
 
-  if (restaurant.isDelivery) {
+  if (restaurant.is_delivery) {
     if (
-      dishesCost >= restaurant.minOrderCostFreeDelivery &&
-      restaurant.minOrderCostFreeDelivery !== null
+      dishesCost >= restaurant.min_order_cost_free_delivery &&
+      restaurant.min_order_cost_free_delivery !== null
     )
       deliveryCost = 0.0;
-    else deliveryCost = restaurant.deliveryCost;
+    else deliveryCost = restaurant.delivery_cost;
   }
 
   const totalCost = Math.round((dishesCost + deliveryCost) * 100) / 100;
@@ -72,7 +72,7 @@ const Checkout = () => {
     dishes: [],
     dishesCost: "",
     paymentForm: "",
-    restaurantId: "",
+    restaurant_id: "",
     totalCost: "",
     userId: "",
   });
@@ -88,7 +88,7 @@ const Checkout = () => {
     newFormData.append("dishes", JSON.stringify(dishes));
     newFormData.append("dishesCost", dishesCost);
     newFormData.append("paymentForm", paymentForm);
-    newFormData.append("restaurantId", restaurantId);
+    newFormData.append("restaurantId", restaurant_id);
     newFormData.append("totalCost", totalCost);
     newFormData.append("userId", user.id);
 

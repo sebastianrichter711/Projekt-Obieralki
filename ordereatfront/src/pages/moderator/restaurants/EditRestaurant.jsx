@@ -48,19 +48,19 @@ export default function EditRestaurant() {
 
   const initialFormData = Object.freeze({
     address: "",
-    deliveryCost: "",
+    delivery_cost: "",
     description: "",
     discounts: [],
     dishes: null,
-    isDelivery: "",
-    kitchenType: "",
+    is_delivery: "",
+    kitchen_type: "",
     logo: null,
-    minOrderCost: "",
-    minOrderCostFreeDelivery: "",
-    moderatorId: "",
+    min_order_cost: "",
+    min_order_cost_free_delivery: "",
+    moderator_id: "",
     name: "",
     phone: "",
-    waitingTimeForDelivery: "",
+    waiting_time_for_delivery: "",
   });
 
   const [data, setData] = useState(initialFormData);
@@ -72,19 +72,19 @@ export default function EditRestaurant() {
         ...data,
         //['id']: res.data.id,
         ["address"]: res.data.address,
-        ["deliveryCost"]: res.data.deliveryCost,
+        ["delivery_cost"]: res.data.delivery_cost,
         ["description"]: res.data.description,
         ["discounts"]: res.data.discounts,
         ["dishes"]: res.data.dishes,
-        ["isDelivery"]: res.data.isDelivery,
-        ["kitchenType"]: res.data.kitchenType,
+        ["is_delivery"]: res.data.is_delivery,
+        ["kitchen_type"]: res.data.kitchen_type,
         ["logo"]: res.data.logo,
-        ["minOrderCost"]: res.data.minOrderCost,
-        ["minOrderCostFreeDelivery"]: res.data.minOrderCostFreeDelivery,
-        ["moderatorId"]: res.data.moderatorId,
+        ["min_order_cost"]: res.data.min_order_cost,
+        ["min_order_cost_free_delivery"]: res.data.min_order_cost_free_delivery,
+        ["moderator_id"]: res.data.moderator_id,
         ["name"]: res.data.name,
         ["phone"]: res.data.phone,
-        ["waitingTimeForDelivery"]: res.data.waitingTimeForDelivery,
+        ["waiting_time_for_delivery"]: res.data.waiting_time_for_delivery,
       });
       console.log(res.data);
     });
@@ -132,21 +132,21 @@ export default function EditRestaurant() {
     api.put("restaurants/" + id, {
       //id: formData.id,
       address: data.address,
-      deliveryCost: data.deliveryCost,
+      delivery_cost: data.delivery_cost,
       description: data.description,
       discounts: data.discounts,
       dishes: data.dishes,
-      isDelivery: data.isDelivery,
-      kitchenType: data.kitchenType,
+      is_delivery: data.is_delivery,
+      kitchen_type: data.kitchen_type,
       logo: data.logo,
-      minOrderCost: data.minOrderCost,
-      minOrderCostFreeDelivery: data.minOrderCostFreeDelivery,
-      moderatorId: data.moderatorId,
+      min_order_cost: data.min_order_cost,
+      min_order_cost_free_delivery: data.min_order_cost_free_delivery,
+      moderator_id: data.moderator_id,
       name: data.name,
       phone: data.phone,
-      waitingTimeForDelivery: data.waitingTimeForDelivery,
+      waiting_time_for_delivery: data.waiting_time_for_delivery,
     });
-    window.location.reload();
+    //window.location.reload();
     navigate("/admin");
   };
 
@@ -177,11 +177,11 @@ export default function EditRestaurant() {
                 variant="outlined"
                 required
                 fullWidth
-                id="deliveryCost"
+                id="delivery_cost"
                 label="Koszt dostawy"
-                name="deliveryCost"
-                autoComplete="deliveryCost"
-                value={data.deliveryCost}
+                name="delivery_cost"
+                autoComplete="delivery_cost"
+                value={data.delivery_cost}
                 onChange={handleChange}
               />
               <Checkbox onChange={handleChangeDelivery} />
@@ -189,44 +189,44 @@ export default function EditRestaurant() {
                 variant="outlined"
                 required
                 fullWidth
-                id="kitchenType"
+                id="kitchen_type"
                 label="Typ kuchni"
-                name="kitchenType"
-                autoComplete="kitchenType"
-                value={data.kitchenType}
+                name="kitchen_type"
+                autoComplete="kitchen_type"
+                value={data.kitchen_type}
                 onChange={handleChange}
               />
               <TextField
                 variant="outlined"
                 required
                 fullWidth
-                id="minOrderCost"
+                id="min_order_cost"
                 label="Minimalny koszt zamówienia"
-                name="minOrderCost"
-                autoComplete="minOrderCost"
-                value={data.minOrderCost}
+                name="min_order_cost"
+                autoComplete="min_order_cost"
+                value={data.min_order_cost}
                 onChange={handleChange}
               />
               <TextField
                 variant="outlined"
                 required
                 fullWidth
-                id="minOrderCostFreeDelivery"
+                id="min_order_cost_free_delivery"
                 label="Bezpłatna dostawa od"
-                name="minOrderCostFreeDelivery"
-                autoComplete="minOrderCostFreeDelivery"
-                value={data.minOrderCostFreeDelivery}
+                name="min_order_cost_free_delivery"
+                autoComplete="min_order_cost_free_delivery"
+                value={data.min_order_cost_free_delivery}
                 onChange={handleChange}
               />
               <TextField
                 variant="outlined"
                 required
                 fullWidth
-                id="moderatorId"
+                id="moderator_id"
                 label="Moderator (ID)"
-                name="moderatorId"
-                autoComplete="moderatorId"
-                value={data.moderatorId}
+                name="moderator_id"
+                autoComplete="moderator_id"
+                value={data.moderator_id}
                 onChange={handleChange}
               />
               <TextField
@@ -255,11 +255,11 @@ export default function EditRestaurant() {
                 variant="outlined"
                 required
                 fullWidth
-                id="waitingTimeForDelivery"
+                id="waiting_time_for_delivery"
                 label="Czas oczekiwania na dostawę"
-                name="waitingTimeForDelivery"
-                autoComplete="waitingTimeForDelivery"
-                value={data.waitingTimeForDelivery}
+                name="waiting_time_for_delivery"
+                autoComplete="waiting_time_for_delivery"
+                value={data.waiting_time_for_delivery}
                 onChange={handleChange}
               />
             </Grid>

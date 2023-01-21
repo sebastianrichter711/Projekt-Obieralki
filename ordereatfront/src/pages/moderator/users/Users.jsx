@@ -9,6 +9,7 @@ import { TableCell } from "@mui/material";
 import { TableContainer } from "@mui/material";
 import { TableHead } from "@mui/material";
 import { TableRow } from "@mui/material";
+import { Box } from "@mui/material";
 import AuthContext from "../../../services/AuthContext";
 import Edit from "@mui/icons-material/Edit";
 import Delete from "@mui/icons-material/Delete";
@@ -32,7 +33,19 @@ export default function Users() {
   }, [setUsers]);
 
   if (!users.users || users.users.length === 0)
-    return <p>Nie znaleziono użytkowników</p>;
+    return (
+      <div>
+        <p style={{ textAlign: "center", fontWeight: "bold" }}>
+          Nie znaleziono użytkowników
+        </p>
+        <br />
+        <Box textAlign="center">
+          <Button href={"/users/add"} variant="contained" color="primary">
+            Dodaj użytkownika
+          </Button>
+        </Box>
+      </div>
+    );
   return (
     <React.Fragment>
       <Container component="main">
@@ -67,7 +80,7 @@ export default function Users() {
                         </Link>
                         <Link
                           color="textPrimary"
-                          href={"/users/delete/" + user.id}
+                          href={"/users/admin/delete/" + user.id}
                         >
                           <Delete></Delete>
                         </Link>

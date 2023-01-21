@@ -5,6 +5,7 @@ from .models import *
 from . import db
 from .schemas import user_schema, users_schema
 from flask_jwt_extended import get_jwt, jwt_required
+import json
 
 views_user = Blueprint('views_user', __name__)
 
@@ -33,7 +34,6 @@ views_user = Blueprint('views_user', __name__)
 #     return user_schema.jsonify(new_user)
 
 @views_user.route('', methods=['GET'])
-@jwt_required()
 def get_users():
     all_users = User.query.all()
     if len(all_users) == 0:
@@ -42,7 +42,6 @@ def get_users():
     return jsonify(result)
 
 @views_user.route('/<uuid:user_id>', methods=['GET'])
-@jwt_required()
 def get_user(user_id):
     user = User.query.get(user_id)
     if user is None:
@@ -50,10 +49,9 @@ def get_user(user_id):
     return user_schema.jsonify(user)
 
 @views_user.route('/<uuid:user_id>', methods=['PUT'])
-@jwt_required()
 def update_user(user_id):
 
-    active = request.json['active']
+    active = True
     address = request.json['address']
     authorize_date = request.json['authorize_date']
     birth_date = request.json['birth_date']
@@ -63,6 +61,8 @@ def update_user(user_id):
     phone = request.json['phone']
     role = request.json['role']
     surname = request.json['surname']
+    orders = request.json['orders']
+    restaurants = request.json['restaurants']
 
     try:
         user = User.query.get(user_id)
@@ -82,23 +82,26 @@ def update_user(user_id):
         user.phone = phone
         user.role = role
         user.surname = surname
+        user.orders = user.orders
+        user.restaurants=user.restaurants
 
         db.session.commit()
 
         return user_schema.jsonify(user)
-    except:
+    except Exception as e:
+        print(e)
         return jsonify("Failure in modifying an user"), 422
 
-@views_user.route('/<uuid:user_id>', methods=["DELETE"])
-@jwt_required()
-def delete_user(user_id):
+@views_user.route('/<uuid:id>', methods=["DELETE"])
+def delete_user(id):
     try:
-        user = User.query.get(user_id)
+        user = User.query.get(id)
         if user is None:
             return jsonify("User not found"), 404
         db.session.delete(user)
         db.session.commit()
-        return jsonify("User " + str(user_id) + " was succesfully deleted!")
+        print("Usunięto usera")
+        return jsonify("User " + str(id) + " was succesfully deleted!")
     except:
         return jsonify("Faliure in deleting an user"), 500
     

@@ -87,7 +87,7 @@ export default function Restaurant() {
             color="textSecondary"
             paragraph
           >
-            Koszt dostawy: {data.data.deliveryCost}
+            Koszt dostawy: {data.data.delivery_cost} zł
           </Typography>
           <Typography
             variant="h5"
@@ -104,7 +104,7 @@ export default function Restaurant() {
             paragraph
           >
             Czy jest dostawa:{" "}
-            {String(data.data.isDelivery) === true ? "tak" : "nie"}
+            {String(data.data.is_delivery) === "true" ? "tak" : "nie"}
           </Typography>
           <Typography
             variant="h5"
@@ -112,7 +112,7 @@ export default function Restaurant() {
             color="textSecondary"
             paragraph
           >
-            Typ kuchni: {data.data.kitchenType}
+            Typ kuchni: {data.data.kitchen_type}
           </Typography>
           <Typography
             variant="h5"
@@ -120,7 +120,7 @@ export default function Restaurant() {
             color="textSecondary"
             paragraph
           >
-            Minimalny koszt zamówienia: {data.data.minOrderCost}
+            Minimalny koszt zamówienia: {data.data.min_order_cost} zł
           </Typography>
           <Typography
             variant="h5"
@@ -128,7 +128,8 @@ export default function Restaurant() {
             color="textSecondary"
             paragraph
           >
-            Bezpłatna dostawa przy kwocie: {data.data.minOrderCostFreeDelivery}
+            Bezpłatna dostawa przy kwocie:{" "}
+            {data.data.min_order_cost_free_delivery} zł
           </Typography>
           <Typography
             variant="h5"
@@ -152,7 +153,7 @@ export default function Restaurant() {
             color="textSecondary"
             paragraph
           >
-            Czas oczekiwania na dostawę: {data.data.waitingTimeForDelivery}
+            Czas oczekiwania na dostawę: {data.data.waiting_time_for_delivery}
           </Typography>
         </Container>
       </div>

@@ -47,29 +47,29 @@ export default function Dish() {
   }, [setData]);
 
   var dishCategory = "";
-  switch (data.data.dishType) {
-    case 1:
+  switch (data.data.dish_type) {
+    case "starter":
       dishCategory = "przystawka";
       break;
-    case 2:
+    case "soup":
       dishCategory = "zupa";
       break;
-    case 3:
+    case "main_course":
       dishCategory = "danie główne";
       break;
-    case 4:
+    case "dessert":
       dishCategory = "deser";
       break;
-    case 5:
+    case "pizza":
       dishCategory = "pizza";
       break;
-    case 6:
+    case "kebab":
       dishCategory = "kebab";
       break;
-    case 7:
+    case "additives":
       dishCategory = "dodatki";
       break;
-    case 8:
+    case "drinks":
       dishCategory = "napoje";
       break;
     default:
@@ -119,7 +119,7 @@ export default function Dish() {
             color="textSecondary"
             paragraph
           >
-            Subkategoria dania: {data.data.dishSubtype}
+            Subkategoria dania: {data.data.dish_subtype}
           </Typography>
           <Typography
             variant="h5"
@@ -143,7 +143,7 @@ export default function Dish() {
             color="textSecondary"
             paragraph
           >
-            Średnica pizzy: {data.data.pizzaDiameter}
+            Średnica pizzy: {data.data.pizza_diameter}
           </Typography>
           <Typography
             variant="h5"
@@ -151,7 +151,7 @@ export default function Dish() {
             color="textSecondary"
             paragraph
           >
-            Cena: {data.data.price}
+            Cena: {data.data.price} zł
           </Typography>
           <Typography
             variant="h5"
@@ -159,7 +159,7 @@ export default function Dish() {
             color="textSecondary"
             paragraph
           >
-            Restauracja(ID): {data.data.restaurantId}
+            Restauracja(ID): {data.data.restaurant_id}
           </Typography>
           <Typography
             variant="h5"

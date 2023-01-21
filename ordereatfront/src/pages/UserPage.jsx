@@ -10,7 +10,7 @@ import { Button } from "@mui/material";
 import "../styles/user-page.css";
 
 const UserPage = () => {
-  const { user } = useContext(AuthContext);
+  const { user, authTokens } = useContext(AuthContext);
   const [gotUser, setGotUser] = useState("");
 
   useEffect(() => {
@@ -40,13 +40,13 @@ const UserPage = () => {
               <form className="checkout__form">
                 <div className="form__group">
                   <p type="text" required>
-                    Data nadania uprawnień: {gotUser.authorizeDate}
+                    Data nadania uprawnień: {gotUser.authorize_date}
                   </p>
                   <p type="text" required>
-                    Data wygaśnięcia uprawnień: {gotUser.endAuthorizeDate}
+                    Data wygaśnięcia uprawnień: {gotUser.end_authorize_date}
                   </p>
                   <p type="text" required>
-                    Data urodzenia: {gotUser.birthDate}
+                    Data urodzenia: {gotUser.birth_date}
                   </p>
                   <p type="text" required>
                     Email: {gotUser.email}

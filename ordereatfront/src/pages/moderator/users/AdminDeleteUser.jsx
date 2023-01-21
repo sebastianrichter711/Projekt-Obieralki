@@ -1,20 +1,30 @@
 import React, { useState, useEffect } from "react";
+import userService from "../../../services/user.service";
 import { useNavigate, useParams } from "react-router-dom";
 //MaterialUI
-
 import { Container } from "@mui/material";
 import { Button } from "@mui/material";
 import { Box } from "@mui/material";
-import RestaurantService from "../../../services/restaurant.service";
-import DishService from "../../../services/dish.service";
+import jwt_decode from "jwt-decode";
 
-export default function DeleteDish() {
+export default function AdminDeleteUser() {
   const navigate = useNavigate();
   const { id } = useParams();
+  let [authTokens, setAuthTokens] = useState(() =>
+    localStorage.getItem("authTokens")
+      ? JSON.parse(localStorage.getItem("authTokens"))
+      : null
+  );
+  let [user, setUser] = useState(() =>
+    localStorage.getItem("authTokens")
+      ? jwt_decode(localStorage.getItem("authTokens"))
+      : null
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    DishService.deleteDish(id)
+    userService
+      .deleteUser(id)
       .catch(function (error) {
         if (error.response) {
           console.log(error.response.data);
@@ -23,14 +33,13 @@ export default function DeleteDish() {
         }
       })
       .then(function () {
-        //window.location.reload();
         navigate("/admin");
+        window.location.reload();
       });
   };
 
   return (
     <Container component="main" maxWidth="sm">
-      <br />
       <br />
       <br />
       <Box
@@ -46,7 +55,7 @@ export default function DeleteDish() {
           type="submit"
           onClick={handleSubmit}
         >
-          Naciśnij, jeśli chcesz usunąć danie
+          Naciśnij, jeśli chcesz usunąć
         </Button>
       </Box>
     </Container>

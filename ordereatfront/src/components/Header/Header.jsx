@@ -92,7 +92,7 @@ const Header = () => {
           </div>
 
           <div className="nav__right d-flex align-items-center gap-4">
-            {user.role === "Admin" ? (
+            {user.role === "admin" ? (
               <Button href="/admin" style={{ textAlign: "center" }}>
                 <p>Panel admina</p>
               </Button>

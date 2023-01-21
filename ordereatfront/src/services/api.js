@@ -8,6 +8,8 @@ const instance = axios.create({
   headers: {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
+    // Authorization:
+    //   "Bearer " + JSON.parse(localStorage.getItem("authTokens")).accessToken,
   },
 });
 

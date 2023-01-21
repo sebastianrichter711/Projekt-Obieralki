@@ -9,29 +9,34 @@ from flask_jwt_extended import get_jwt, jwt_required
 views_dish = Blueprint('views_dish', __name__)
 
 @views_dish.route('', methods=['POST'])
-@jwt_required()
 def add_dish():
-    description = request.json['description']
-    dish_subtype = request.json['dish_subtype']
-    dish_type = request.json['dish_type']
-    meat_types = request.json['meat_types']
-    name = request.json['name']
-    pizza_diameter = request.json['pizza_diameter']
-    price = request.json['price']
-    restaurant_id = request.json['restaurant_id']
-    sauces = request.json['sauces']
-
+    
     try:
+
+        description = request.json['description']
+        dish_subtype = request.json['dish_subtype']
+        dish_type = request.json['dish_type']
+        meat_types = request.json['meat_types']
+        name = request.json['name']
+        pizza_diameter = request.json['pizza_diameter']
+        price = request.json['price']
+        restaurant_id = request.json['restaurant_id']
+        sauces = request.json['sauces']
+
+        if pizza_diameter is "":
+            pizza_diameter = None
+        
         new_dish = Dish(description,dish_subtype,dish_type,meat_types,name,pizza_diameter,price,restaurant_id,sauces)
 
         db.session.add(new_dish)
         db.session.commit()
 
         return dish_schema.jsonify(new_dish), 201
-    except:
+    except Exception as e:
+        print(e)
         return jsonify("Creating a dish is not successful!"), 422
 
-@views_dish.route('', methods=['GET'])
+@views_dish.route('/', methods=['GET'])
 def get_dishes():
     all_dishes = Dish.query.all()
     if len(all_dishes) == 0:
@@ -65,7 +70,6 @@ def get_all_dishes_from_restaurant_by_name(restaurant_id):
     return jsonify(result)
 
 @views_dish.route('/<uuid:dish_id>', methods=['PUT'])
-@jwt_required()
 def update_dish(dish_id):
 
     description = request.json['description']
@@ -84,25 +88,26 @@ def update_dish(dish_id):
         if dish is None:
             return jsonify("Dish " + str(dish_id) + "not_found"), 404
 
+        print(dish_type)
         dish.description = description
         dish.dish_subtype = dish_subtype
         dish.dish_type = dish_type
-        dish.meat_types = meat_types
+        dish.meat_types = dish.meat_types
         dish.name = name
         dish.pizza_diameter = pizza_diameter
         dish.price = price
         dish.restaurant_id = restaurant_id
-        dish.sauces = sauces
+        dish.sauces = dish.sauces
     
         db.session.commit()
 
         return dish_schema.jsonify(dish)
 
-    except:
+    except Exception as e:
+        print(e)
         return jsonify("Updating a dish wasn't ended successfully!"), 422
 
 @views_dish.route('/<uuid:dish_id>', methods=["DELETE"])
-@jwt_required()
 def delete_dish(dish_id):
     try:
         dish = Dish.query.get(dish_id)

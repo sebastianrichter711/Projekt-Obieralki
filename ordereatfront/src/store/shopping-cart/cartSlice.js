@@ -49,7 +49,7 @@ const cartSlice = createSlice({
           price: newItem.price,
           quantity: 1,
           totalPrice: newItem.price,
-          restaurantId: newItem.restaurantId,
+          restaurant_id: newItem.restaurant_id,
         });
       } else {
         existingItem.quantity++;

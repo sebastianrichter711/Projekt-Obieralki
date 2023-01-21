@@ -18,15 +18,18 @@ class User(db.Model):
     phone = db.Column(db.String(14), nullable=True)
     role = db.Column(db.Enum('admin', 'moderator', 'user', name='user_role'), index=True, nullable=False)
     surname = db.Column(db.String(30), nullable=True)
-    orders = db.relationship('Order', backref='user', lazy=True)
+    orders = db.relationship('Order', backref='user', lazy=True, cascade="all,delete")
     restaurants = db.relationship('Restaurant', backref='user', lazy=True)
+    pass_reset_token = db.Column(db.String(400), nullable=True)
 
-    def __init__(self, active,date_created,email,role,password):
+    def __init__(self, active,date_created,email,role,password, authorize_date, end_authorize_date):
         self.active = active
         self.date_created = date_created
         self.email = email
         self.password = password
         self.role=role
+        self.authorize_date = authorize_date
+        self.end_authorize_date = end_authorize_date
 
     def verify_password(self, pwd):
         return check_password_hash(self.password, pwd)
@@ -70,7 +73,7 @@ class Dish(db.Model):
     name = db.Column(db.String(300), nullable=False)
     pizza_diameter = db.Column(db.Float, nullable=True)
     price = db.Column(db.Float, nullable=False)
-    restaurant_id = db.Column(GUID(), db.ForeignKey('restaurant.id'), nullable=True)
+    restaurant_id = db.Column(GUID(), db.ForeignKey('restaurant.id'), nullable=False)
     sauces = db.Column(db.PickleType, nullable=True)
 
     def __init__(self, description,dish_subtype,dish_type,meat_types,name,pizza_diameter,price,restaurant_id,sauces):
@@ -90,7 +93,7 @@ class Restaurant(db.Model):
     delivery_cost = db.Column(db.Float, nullable=False)
     description = db.Column(db.String(200), nullable=True)
     discounts = db.Column(db.PickleType, nullable=True)
-    dishes = db.relationship('Dish', backref='restaurant', lazy=True)
+    dishes = db.relationship('Dish', backref='restaurant', cascade="all,delete", lazy=True)
     is_delivery = db.Column(db.Boolean, nullable=False)
     kitchen_type = db.Column(db.String(20), nullable=False)
     logo = db.Column(db.String(300), nullable=True)

@@ -26,19 +26,11 @@ export default function UncompletedOrders() {
   console.log(user.id);
 
   useEffect(() => {
-    api
-      .get("/orders/uncompleted", {
-        headers: {
-          Authorization:
-            "Bearer " +
-            JSON.parse(localStorage.getItem("authTokens")).accessToken,
-        },
-      })
-      .then((res) => {
-        const allOrders = res.data;
-        setOrders({ orders: allOrders });
-        console.log(res.data);
-      });
+    api.get("/orders/users/" + user.id + "/uncompleted").then((res) => {
+      const allOrders = res.data;
+      setOrders({ orders: allOrders });
+      console.log(res.data);
+    });
   }, [setOrders]);
 
   if (!orders.orders || orders.orders.length === 0)
@@ -64,7 +56,7 @@ export default function UncompletedOrders() {
                       </TableCell>
                       <TableCell align="left">
                         <Link color="textPrimary" href={"/orders/" + order.id}>
-                          {order.orderDate}
+                          {order.order_date}
                         </Link>
                       </TableCell>
                     </TableRow>

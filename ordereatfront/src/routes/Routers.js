@@ -34,6 +34,7 @@ import Order from "../pages/moderator/orders/Order";
 import DeleteOrder from "../pages/moderator/orders/DeleteOrder";
 import EditOrder from "../pages/moderator/orders/EditOrder";
 import UserOrders from "../pages/UserOrders";
+import AdminDeleteUser from "../pages/moderator/users/AdminDeleteUser";
 
 const Routers = () => {
   return (
@@ -67,6 +68,7 @@ const Routers = () => {
       <Route path="/users/:id" element={<User />} />
       <Route path="/users/add" element={<AddUser />} />
       <Route path="/users/admin/edit/:id" element={<AdminEditUser />} />
+      <Route path="/users/admin/delete/:id" element={<AdminDeleteUser />} />
       <Route path="/orders/:id" element={<Order />} />
       <Route path="/orders/delete/:id" element={<DeleteOrder />} />
       <Route path="/orders/edit/:id" element={<EditOrder />} />

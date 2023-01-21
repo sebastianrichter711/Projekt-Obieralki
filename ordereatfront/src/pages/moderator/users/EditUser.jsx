@@ -50,12 +50,12 @@ export default function EditUser() {
   const initialFormData = Object.freeze({
     active: "",
     address: "",
-    authorizeDate: "",
-    birthDate: "",
-    dateCreated: "",
-    dateOfLastLogin: "",
+    authorize_date: "",
+    birth_date: "",
+    date_created: "",
+    date_of_last_login: "",
     email: "",
-    endAuthorizeDate: "",
+    end_authorize_date: "",
     name: "",
     orders: [],
     phone: "",
@@ -80,18 +80,18 @@ export default function EditUser() {
   };
 
   useEffect(() => {
-    api.get("https://localhost:44361/api/users/" + id).then((res) => {
+    api.get("http://localhost:5000/api/users/" + id).then((res) => {
       updateFormData({
         ...formData,
         // //['id']: res.data.id,
         ["active"]: res.data.active,
         ["address"]: res.data.address,
-        ["authorizeDate"]: res.data.authorizeDate,
-        ["birthDate"]: res.data.birthDate,
-        ["dateCreated"]: res.data.dateCreated,
-        ["dateOfLastLogin"]: res.data.dateOfLastLogin,
+        ["authorize_date"]: res.data.authorize_date,
+        ["birth_date"]: res.data.birth_date,
+        ["date_created"]: res.data.date_created,
+        ["date_of_last_login"]: res.data.date_of_last_login,
         ["email"]: res.data.email,
-        ["endAuthorizeDate"]: res.data.endAuthorizeDate,
+        ["end_authorize_date"]: res.data.end_authorize_date,
         ["name"]: res.data.name,
         ["orders"]: res.data.orders,
         ["phone"]: res.data.phone,
@@ -109,6 +109,8 @@ export default function EditUser() {
     });
   }, [updateFormData]);
 
+  console.log(formData);
+
   const handleChange = (e) => {
     e.preventDefault();
     updateFormData({
@@ -124,12 +126,12 @@ export default function EditUser() {
     let newFormData = new FormData();
     newFormData.append("active", formData.active);
     newFormData.append("address", formData.address);
-    newFormData.append("authorizeDate", date.toISOString());
-    newFormData.append("birthDate", date.toISOString());
-    newFormData.append("dateCreated", formData.dateCreated);
-    newFormData.append("dateOfLastLogin", formData.dateOfLastLogin);
+    newFormData.append("authorize_date", formData.authorize_date);
+    newFormData.append("birth_date", date.toISOString());
+    newFormData.append("date_created", formData.dateCreated);
+    newFormData.append("date_of_last_login", formData.dateOfLastLogin);
     newFormData.append("email", formData.email);
-    newFormData.append("endAuthorizeDate", date.toISOString());
+    newFormData.append("end_authorize_date", fromData.end_authorize_date);
     newFormData.append("name", formData.name);
     newFormData.append("orders", formData.orders);
     newFormData.append("phone", formData.phone);
@@ -250,10 +252,10 @@ export default function EditUser() {
                   variant="outlined"
                   required
                   fullWidth
-                  id="birthDate"
+                  id="birth_date"
                   label="Data urodzenia"
-                  name="birthDate"
-                  autoComplete="birthDate"
+                  name="birth_date"
+                  autoComplete="birth_date"
                   value={date}
                   onChange={handleChange}
                   multiline

@@ -14,33 +14,33 @@ const forgotPassword = (email) => {
   });
 };
 
-const resetPassword = (token, password, passwordAgain) => {
+const resetPassword = (token, password, password_again) => {
   return api
-    .post("/auth/reset-password", { token, password, passwordAgain })
+    .post("/auth/reset-password", { token, password, password_again })
     .then((response) => {
       //localStorage.setItem("user", JSON.stringify(response.data));
-
+      console.log(response.data);
       return response.data;
     });
 };
 
 const signup = (
   active,
-  authorizeDate,
+  authorize_date,
   email,
-  endAuthorizeDate,
+  end_authorize_date,
   password,
-  passwordAgain,
+  password_again,
   role
 ) => {
   return api
     .post("/auth/register", {
       active,
-      authorizeDate,
+      authorize_date,
       email,
-      endAuthorizeDate,
+      end_authorize_date,
       password,
-      passwordAgain,
+      password_again,
       role,
     })
     .then((response) => {

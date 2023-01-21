@@ -49,12 +49,12 @@ export default function AdminEditUser() {
   const initialFormData = Object.freeze({
     active: "",
     address: "",
-    authorizeDate: "",
-    birthDate: "",
-    dateCreated: "",
-    dateOfLastLogin: "",
+    authorize_date: "",
+    birth_date: "",
+    date_created: "",
+    date_of_last_login: "",
     email: "",
-    endAuthorizeDate: "",
+    end_authorize_date: "",
     name: "",
     orders: [],
     phone: "",
@@ -80,18 +80,18 @@ export default function AdminEditUser() {
   };
 
   useEffect(() => {
-    api.get("https://localhost:44361/api/users/" + id).then((res) => {
+    api.get("http://localhost:5000/api/users/" + id).then((res) => {
       updateFormData({
         ...formData,
         // //['id']: res.data.id,
         ["active"]: res.data.active,
         ["address"]: res.data.address,
-        ["authorizeDate"]: res.data.authorizeDate,
-        ["birthDate"]: res.data.birthDate,
-        ["dateCreated"]: res.data.dateCreated,
-        ["dateOfLastLogin"]: res.data.dateOfLastLogin,
+        ["authorize_date"]: res.data.authorize_date,
+        ["birth_date"]: res.data.birth_date,
+        ["date_created"]: res.data.date_created,
+        ["date_of_last_login"]: res.data.date_of_last_login,
         ["email"]: res.data.email,
-        ["endAuthorizeDate"]: res.data.endAuthorizeDate,
+        ["end_authorize_date"]: res.data.end_authorize_date,
         ["name"]: res.data.name,
         ["orders"]: res.data.orders,
         ["phone"]: res.data.phone,
@@ -136,12 +136,12 @@ export default function AdminEditUser() {
     let newFormData = new FormData();
     newFormData.append("active", checked);
     newFormData.append("address", formData.address);
-    newFormData.append("authorizeDate", formData.authorizeDate);
-    newFormData.append("birthDate", date.toISOString());
-    newFormData.append("dateCreated", formData.dateCreated);
-    newFormData.append("dateOfLastLogin", formData.dateOfLastLogin);
+    newFormData.append("authorize_date", formData.authorize_date);
+    newFormData.append("birth_date", date.toISOString());
+    newFormData.append("date_created", formData.date_created);
+    newFormData.append("date_of_last_login", formData.date_of_last_login);
     newFormData.append("email", formData.email);
-    newFormData.append("endAuthorizeDate", formData.endAuthorizeDate);
+    newFormData.append("end_authorize_date", formData.end_authorize_date);
     newFormData.append("name", formData.name);
     newFormData.append("orders", formData.orders);
     newFormData.append("phone", formData.phone);
@@ -164,12 +164,12 @@ export default function AdminEditUser() {
       <Container component="main" maxWidth="sm">
         <CssBaseline />
         <div className={classes.paper}>
-          <Typography component="h1" variant="h5">
-            Edytuj dane osobowe
-          </Typography>
+          <br />
+          <br />
           <br />
           <form className={classes.form} noValidate>
             <Grid container spacing={2}>
+              {"Aktywny"}
               <Checkbox onChange={handleChangeUserActive} />
               <Grid item xs={12}>
                 <TextField
@@ -189,11 +189,11 @@ export default function AdminEditUser() {
                   variant="outlined"
                   required
                   fullWidth
-                  id="authorizeDate"
+                  id="authorize_date"
                   label="Data nadania uprawnień"
-                  name="authorizeDate"
-                  autoComplete="authorizeDate"
-                  value={formData.authorizeDate}
+                  name="authorize_date"
+                  autoComplete="authorize_date"
+                  value={formData.authorize_date}
                   onChange={handleChange}
                   multiline
                   rows={1}
@@ -204,10 +204,10 @@ export default function AdminEditUser() {
                   variant="outlined"
                   required
                   fullWidth
-                  id="birthDate"
+                  id="birth_date"
                   label="Data urodzenia"
-                  name="birthDate"
-                  autoComplete="birthDate"
+                  name="birth_date"
+                  autoComplete="birth_date"
                   value={date}
                   onChange={handleChange}
                   multiline
@@ -226,11 +226,11 @@ export default function AdminEditUser() {
                   variant="outlined"
                   required
                   fullWidth
-                  id="dateCreated"
+                  id="date_created"
                   label="Data utworzenia"
-                  name="dateCreated"
-                  autoComplete="dateCreated"
-                  value={formData.dateCreated}
+                  name="date_created"
+                  autoComplete="date_created"
+                  value={formData.date_created}
                   onChange={handleChange}
                   multiline
                   rows={1}
@@ -239,13 +239,12 @@ export default function AdminEditUser() {
               <Grid item xs={12}>
                 <TextField
                   variant="outlined"
-                  required
                   fullWidth
-                  id="dateOfLastLogin"
+                  id="date_of_last_login"
                   label="Data ost. logowania"
-                  name="dateOfLastLogin"
-                  autoComplete="dateOfLastLogin"
-                  value={formData.dateOfLastLogin}
+                  name="date_of_last_login"
+                  autoComplete="date_of_last_login"
+                  value={formData.date_of_last_login}
                   onChange={handleChange}
                   multiline
                   rows={1}
@@ -271,11 +270,11 @@ export default function AdminEditUser() {
                   variant="outlined"
                   required
                   fullWidth
-                  id="endAuthorizeDate"
+                  id="end_authorize_date"
                   label="Data wygaśnięcia uprawnień"
-                  name="endAuthorizeDate"
-                  autoComplete="endAuthorizeDate"
-                  value={formData.endAuthorizeDate}
+                  name="end_authorize_date"
+                  autoComplete="end_authorize_date"
+                  value={formData.end_authorize_date}
                   onChange={handleChange}
                   multiline
                   rows={1}

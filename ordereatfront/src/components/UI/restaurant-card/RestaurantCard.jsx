@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { cartActions } from "../../../store/shopping-cart/cartSlice";
 
 const RestaurantCard = (props) => {
-  const { id, name, address, waitingTimeForDelivery, deliveryCost } =
+  const { id, name, address, waiting_time_for_delivery, delivery_cost } =
     props.item;
   const dispatch = useDispatch();
   console.log(id);
@@ -36,11 +36,11 @@ const RestaurantCard = (props) => {
         </div>
         <div>
           <p className="product__time">
-            Czas oczekiwania: {waitingTimeForDelivery}
+            Czas oczekiwania: {waiting_time_for_delivery}
           </p>
         </div>
         <div>
-          <p className="product__delivery">Koszt dostawy: {deliveryCost} zł</p>
+          <p className="product__delivery">Koszt dostawy: {delivery_cost} zł</p>
         </div>
       </div>
     </div>

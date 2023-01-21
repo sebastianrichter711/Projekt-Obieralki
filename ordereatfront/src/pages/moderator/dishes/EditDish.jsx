@@ -48,13 +48,13 @@ export default function EditDish() {
   const { id } = useParams();
   const initialFormData = Object.freeze({
     description: "",
-    dishSubtype: "",
-    dishType: "",
-    meatTypes: [],
+    dish_subtype: "",
+    dish_type: "",
+    meat_types: [],
     name: "",
-    pizzaDiameter: "",
+    pizza_diameter: "",
     price: "",
-    restaurantId: "",
+    restaurant_id: "",
     sauces: [],
   });
 
@@ -62,14 +62,14 @@ export default function EditDish() {
   const [dishType, setDishType] = useState("");
 
   const dishTypeOptions = [
-    { value: 1, label: "Przystawki" },
-    { value: 2, label: "Zupy" },
-    { value: 3, label: "Dania główne" },
-    { value: 4, label: "Desery" },
-    { value: 5, label: "Pizza" },
-    { value: 6, label: "Kebab" },
-    { value: 7, label: "Dodatki" },
-    { value: 8, label: "Napoje" },
+    { value: "starter", label: "Przystawki" },
+    { value: "soup", label: "Zupy" },
+    { value: "main_course", label: "Dania główne" },
+    { value: "dessert", label: "Desery" },
+    { value: "pizza", label: "Pizza" },
+    { value: "kebab", label: "Kebab" },
+    { value: "additives", label: "Dodatki" },
+    { value: "drinks", label: "Napoje" },
   ];
 
   const handleChange = (e) => {
@@ -95,19 +95,21 @@ export default function EditDish() {
         ...data,
         //['id']: res.data.id,
         ["description"]: res.data.description,
-        ["dishSubtype"]: res.data.dishSubtype,
-        ["dishType"]: res.data.dishType,
-        ["meatTypes"]: res.data.meatTypes,
+        ["dish_subtype"]: res.data.dish_subtype,
+        ["dish_type"]: res.data.dish_type,
+        ["meat_types"]: res.data.meat_types,
         ["name"]: res.data.name,
-        ["pizzaDiameter"]: res.data.pizzaDiameter,
+        ["pizza_diameter"]: res.data.pizza_diameter,
         ["price"]: res.data.price,
-        ["restaurantId"]: res.data.restaurantId,
+        ["restaurant_id"]: res.data.restaurant_id,
         ["sauces"]: res.data.sauces,
       });
       console.log(res.data);
+      setDishType(data.dish_type);
     });
   }, [setData]);
 
+  console.log(dishType);
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(data);
@@ -115,15 +117,16 @@ export default function EditDish() {
     api.put("dishes/" + id, {
       //id: formData.id,
       description: data.description,
-      dishSubtype: data.dishSubtype,
-      dishType: data.dishType,
-      meatTypes: data.meatTypes,
+      dish_subtype: data.dish_subtype,
+      dish_type: dishType === "" ? data.dish_type : dishType,
+      meat_types: data.meat_types,
       name: data.name,
-      pizzaDiameter: data.pizzaDiameter,
+      pizza_diameter: data.pizza_diameter,
       price: data.price,
-      restaurantId: data.restaurantId,
+      restaurant_id: data.restaurant_id,
       sauces: data.sauces,
     });
+    console.log(data);
     //window.location.reload();
     navigate("/admin");
   };
@@ -155,11 +158,11 @@ export default function EditDish() {
                 variant="outlined"
                 required
                 fullWidth
-                id="dishSubtype"
+                id="dish_subtype"
                 label="Subkategoria dania"
-                name="dishSubtype"
-                autoComplete="dishSubtype"
-                value={data.dishSubtype}
+                name="dish_subtype"
+                autoComplete="dish_subtype"
+                value={data.dish_subtype}
                 onChange={handleChange}
               />
               <Select
@@ -184,11 +187,11 @@ export default function EditDish() {
               <TextField
                 variant="outlined"
                 fullWidth
-                id="pizzaDiameter"
+                id="pizza_diameter"
                 label="Średnica pizzy"
-                name="pizzaDiameter"
-                autoComplete="pizzaDiameter"
-                value={data.pizzaDiameter}
+                name="pizza_diameter"
+                autoComplete="pizza_diameter"
+                value={data.pizza_diameter}
                 onChange={handleChange}
               />
               <TextField
@@ -206,11 +209,11 @@ export default function EditDish() {
                 variant="outlined"
                 required
                 fullWidth
-                id="restaurantId"
+                id="restaurant_id"
                 label="Restauracja (ID)"
-                name="restaurantId"
-                autoComplete="restaurantId"
-                value={data.restaurantId}
+                name="restaurant_id"
+                autoComplete="restaurant_id"
+                value={data.restaurant_id}
                 onChange={handleChange}
               />
             </Grid>

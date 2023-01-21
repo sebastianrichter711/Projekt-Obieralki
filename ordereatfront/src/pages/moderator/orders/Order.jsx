@@ -47,36 +47,28 @@ export default function Order() {
   const { id } = useParams();
   const [data, setData] = useState({ data: [] });
   var token = useEffect(() => {
-    api
-      .get("/orders/" + id, {
-        headers: {
-          Authorization:
-            "Bearer " +
-            JSON.parse(localStorage.getItem("authTokens")).accessToken,
-        },
-      })
-      .then((res) => {
-        const gotOrder = res.data;
-        setData({ data: gotOrder });
-        console.log(res.data);
-      });
+    api.get("/orders/" + id).then((res) => {
+      const gotOrder = res.data;
+      setData({ data: gotOrder });
+      console.log(res.data);
+    });
   }, [setData]);
 
   console.log(id);
   console.log(JSON.parse(localStorage.getItem("authTokens")).accessToken);
   var paymentForm = "";
   switch (data.data.paymentForm) {
-    case 1:
+    case "card":
       paymentForm = "karta płatnicza";
       break;
-    case 2:
+    case "blik":
       paymentForm = "blik";
       break;
-    case 3:
+    case "voucher":
       paymentForm = "voucher";
       break;
     default:
-      paymentForm = "voucher";
+      paymentForm = "";
       break;
   }
 
@@ -98,7 +90,7 @@ export default function Order() {
             gutterBottom
             className={classes.bold}
           >
-            {data.data.id}
+            Zamówienie nr {data.data.id}
           </Typography>
           <Typography
             variant="h5"
@@ -106,7 +98,7 @@ export default function Order() {
             color="textSecondary"
             paragraph
           >
-            Adres dostawy: {data.data.deliveryAddress}
+            Adres dostawy: {data.data.delivery_address}
           </Typography>
           <Typography
             variant="h5"
@@ -114,7 +106,7 @@ export default function Order() {
             color="textSecondary"
             paragraph
           >
-            Koszt dostawy: {data.data.deliveryCost} zł
+            Koszt dostawy: {data.data.delivery_cost} zł
           </Typography>
           <Typography
             variant="h5"
@@ -122,7 +114,7 @@ export default function Order() {
             color="textSecondary"
             paragraph
           >
-            Koszt dań: {data.data.dishesCost} zł
+            Koszt dań: {data.data.dishes_cost} zł
           </Typography>
           <Typography
             variant="h5"
@@ -130,7 +122,7 @@ export default function Order() {
             color="textSecondary"
             paragraph
           >
-            Czy zamknięte: {data.data.isCompleted == true ? "tak" : "nie"}
+            Czy zamknięte: {data.data.is_completed == true ? "tak" : "nie"}
           </Typography>
           <Typography
             variant="h5"
@@ -138,7 +130,7 @@ export default function Order() {
             color="textSecondary"
             paragraph
           >
-            Data złożenia zamówienia: {data.data.orderDate}
+            Data złożenia zamówienia: {data.data.order_date}
           </Typography>
           <Typography
             variant="h5"
@@ -146,7 +138,7 @@ export default function Order() {
             color="textSecondary"
             paragraph
           >
-            Forma płatności: {paymentForm}
+            Forma płatności: {data.data.payment_form}
           </Typography>
           <Typography
             variant="h5"
@@ -154,7 +146,7 @@ export default function Order() {
             color="textSecondary"
             paragraph
           >
-            Łączny koszt zamówienia: {data.data.totalCost} zł
+            Łączny koszt zamówienia: {data.data.total_cost} zł
           </Typography>
           <Typography
             variant="h5"
@@ -162,7 +154,7 @@ export default function Order() {
             color="textSecondary"
             paragraph
           >
-            Zamawiający: {data.data.userId}
+            Zamawiający: {data.data.user_id}
           </Typography>
           {/* <Paper>
             <TableContainer>

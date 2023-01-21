@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { Container } from "@mui/material";
 import { Link } from "@mui/material";
 import { Button } from "@mui/material";
+import { Box } from "@mui/material";
 import { Paper } from "@mui/material";
 import { Table } from "@mui/material";
 import { TableBody } from "@mui/material";
@@ -33,7 +34,18 @@ export default function Dishes() {
   }, [setDishes]);
 
   if (!dishes.dishes || dishes.dishes.length === 0)
-    return <p>Nie znaleziono dań</p>;
+    return (
+      <div>
+        <p style={{ textAlign: "center", fontWeight: "bold" }}>
+          Nie znaleziono dań
+        </p>
+        <Box textAlign="center">
+          <Button href={"/dishes/add"} variant="contained" color="primary">
+            Dodaj danie
+          </Button>
+        </Box>
+      </div>
+    );
   return (
     <React.Fragment>
       <Container component="main">

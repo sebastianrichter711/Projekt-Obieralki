@@ -8,7 +8,7 @@ import Users from "./moderator/users/Users";
 const AdminPage = () => {
   let { user } = useContext(AuthContext);
 
-  if (user.role !== "Admin")
+  if (user.role !== "admin")
     return (
       <h1 style={{ textAlign: "center" }}>
         Strona przeznaczona dla administratorów!
@@ -18,11 +18,11 @@ const AdminPage = () => {
     <div>
       <h1 style={{ textAlign: "center" }}>Panel administracyjny</h1>
       <br />
+      <Users />
+      <br />
       <Restaurants />
       <br />
       <Dishes />
-      <br />
-      <Users />
       <br />
       <Orders />
       <br />

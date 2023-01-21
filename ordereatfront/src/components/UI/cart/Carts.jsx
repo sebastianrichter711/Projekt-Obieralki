@@ -12,7 +12,9 @@ import "../../../styles/shopping-cart.css";
 const Carts = () => {
   const dispatch = useDispatch();
   const cartProducts = useSelector((state) => state.cart.cartItems);
-  const totalAmount = useSelector((state) => state.cart.totalAmount);
+  var totalAmount = useSelector((state) => state.cart.totalAmount);
+
+  totalAmount = Math.round(totalAmount * 100) / 100;
 
   console.log(cartProducts);
 

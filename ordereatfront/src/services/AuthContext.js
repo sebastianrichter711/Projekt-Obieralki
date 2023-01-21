@@ -55,7 +55,9 @@ export const AuthProvider = ({ children }) => {
 
   let logoutUser = () => {
     const response = api.post("/auth/logout", {
-      Authorization: api.defaults.headers["Authorization"],
+      Authorization:
+        "Bearer " +
+        JSON.parse(localStorage.getItem("authTokens")).accessToken.trim(),
     });
     setAuthTokens("xxx");
     setUser("xxx");

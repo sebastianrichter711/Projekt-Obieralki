@@ -45,19 +45,19 @@ export default function AddRestaurant() {
   const navigate = useNavigate();
   const initialFormData = Object.freeze({
     address: "",
-    deliveryCost: "",
+    delivery_cost: "",
     description: "",
     discounts: [],
     dishes: null,
-    isDelivery: "",
-    kitchenType: "",
+    is_delivery: "",
+    kitchen_type: "",
     logo: null,
-    minOrderCost: "",
-    minOrderCostFreeDelivery: "",
-    moderatorId: "",
+    min_order_cost: "",
+    min_order_cost_free_delivery: "",
+    moderator_id: "",
     name: "",
     phone: "",
-    waitingTimeForDelivery: "",
+    waiting_time_for_delivery: "",
   });
 
   const [data, setData] = useState(initialFormData);
@@ -102,19 +102,25 @@ export default function AddRestaurant() {
     e.preventDefault();
     let formData = new FormData();
     formData.append("address", data.address);
-    formData.append("deliveryCost", data.deliveryCost);
+    formData.append("delivery_cost", data.delivery_cost);
     formData.append("description", data.description);
     formData.append("discounts", []);
     formData.append("dishes", []);
-    formData.append("isDelivery", checked);
-    formData.append("kitchenType", data.kitchenType);
+    formData.append("is_delivery", checked);
+    formData.append("kitchen_type", data.kitchen_type);
     formData.append("logo", "");
-    formData.append("minOrderCost", data.minOrderCost);
-    formData.append("minOrderCostFreeDelivery", data.minOrderCostFreeDelivery);
-    formData.append("moderatorId", data.moderatorId);
+    formData.append("min_order_cost", data.min_order_cost);
+    formData.append(
+      "min_order_cost_free_delivery",
+      data.min_order_cost_free_delivery
+    );
+    formData.append("moderator_id", data.moderator_id);
     formData.append("name", data.name);
     formData.append("phone", data.phone);
-    formData.append("waitingTimeForDelivery", data.waitingTimeForDelivery);
+    formData.append(
+      "waiting_time_for_delivery",
+      data.waiting_time_for_delivery
+    );
     console.log(formData);
     api.post("/restaurants", formData);
     navigate("/admin");
@@ -157,51 +163,52 @@ export default function AddRestaurant() {
                 variant="outlined"
                 required
                 fullWidth
-                id="deliveryCost"
+                id="delivery_cost"
                 label="Koszt dostawy"
-                name="deliveryCost"
-                autoComplete="deliveryCost"
+                name="delivery_cost"
+                autoComplete="delivery_cost"
                 onChange={handleChange}
               />
+              {"Czy dostawa"}
               <Checkbox onChange={handleChangeDelivery} />
               <TextField
                 variant="outlined"
                 required
                 fullWidth
-                id="kitchenType"
+                id="kitchen_type"
                 label="Typ kuchni"
-                name="kitchenType"
-                autoComplete="kitchenType"
+                name="kitchen_type"
+                autoComplete="kitchen_type"
                 onChange={handleChange}
               />
               <TextField
                 variant="outlined"
                 required
                 fullWidth
-                id="minOrderCost"
+                id="min_order_cost"
                 label="Minimalny koszt zamówienia"
-                name="minOrderCost"
-                autoComplete="minOrderCost"
+                name="min_order_cost"
+                autoComplete="min_order_cost"
                 onChange={handleChange}
               />
               <TextField
                 variant="outlined"
                 required
                 fullWidth
-                id="minOrderCostFreeDelivery"
+                id="min_order_cost_free_delivery"
                 label="Bezpłatna dostawa od"
-                name="minOrderCostFreeDelivery"
-                autoComplete="minOrderCostFreeDelivery"
+                name="min_order_cost_free_delivery"
+                autoComplete="min_order_cost_free_delivery"
                 onChange={handleChange}
               />
               <TextField
                 variant="outlined"
                 required
                 fullWidth
-                id="moderatorId"
+                id="moderator_id"
                 label="Moderator (ID)"
-                name="moderatorId"
-                autoComplete="moderatorId"
+                name="moderator_id"
+                autoComplete="moderator_id"
                 onChange={handleChange}
               />
               <TextField
@@ -228,10 +235,10 @@ export default function AddRestaurant() {
                 variant="outlined"
                 required
                 fullWidth
-                id="waitingTimeForDelivery"
+                id="waiting_time_for_delivery"
                 label="Czas oczekiwania na dostawę"
-                name="waitingTimeForDelivery"
-                autoComplete="waitingTimeForDelivery"
+                name="waiting_time_for_delivery"
+                autoComplete="waiting_time_for_delivery"
                 onChange={handleChange}
               />
             </Grid>

@@ -49,13 +49,13 @@ export default function User() {
 
   var role = "";
   switch (data.data.role) {
-    case 0:
+    case "admin":
       role = "Admin";
       break;
-    case 1:
+    case "moderator":
       role = "Moderator";
       break;
-    case 2:
+    case "user":
       role = "User";
       break;
     default:
@@ -97,7 +97,7 @@ export default function User() {
             color="textSecondary"
             paragraph
           >
-            Aktywny: {String(data.data.active) === true ? "tak" : "nie"}
+            Aktywny: {String(data.data.active) === "true" ? "tak" : "nie"}
           </Typography>
           <Typography
             variant="h5"
@@ -113,7 +113,7 @@ export default function User() {
             color="textSecondary"
             paragraph
           >
-            Data nadania uprawnień: {data.data.authorizeDate}
+            Data nadania uprawnień: {data.data.authorize_date}
           </Typography>
           <Typography
             variant="h5"
@@ -121,7 +121,7 @@ export default function User() {
             color="textSecondary"
             paragraph
           >
-            Data urodzenia: {data.data.birthDate}
+            Data urodzenia: {data.data.birth_date}
           </Typography>
           <Typography
             variant="h5"
@@ -129,7 +129,7 @@ export default function User() {
             color="textSecondary"
             paragraph
           >
-            Data utworzenia: {data.data.dateCreated}
+            Data utworzenia: {data.data.date_created}
           </Typography>
           <Typography
             variant="h5"
@@ -137,7 +137,7 @@ export default function User() {
             color="textSecondary"
             paragraph
           >
-            Data ostatniego logowania: {data.data.dateOfLastLogin}
+            Data ostatniego logowania: {data.data.date_of_last_login}
           </Typography>
           <Typography
             variant="h5"
@@ -145,7 +145,7 @@ export default function User() {
             color="textSecondary"
             paragraph
           >
-            Data wygaśnięcia uprawnień: {data.data.endAuthorizeDate}
+            Data wygaśnięcia uprawnień: {data.data.end_authorize_date}
           </Typography>
           <Typography
             variant="h5"
