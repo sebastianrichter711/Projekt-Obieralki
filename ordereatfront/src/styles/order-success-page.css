@@ -1,0 +1,11 @@
+.success_img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 25%;
+  transform: scale(1.3);
+}
+.text_btn {
+  text-align: center;
+  padding: 70px 0;
+}

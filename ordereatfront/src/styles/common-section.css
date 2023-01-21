@@ -1,0 +1,8 @@
+.common__section {
+  background: linear-gradient(#212245b2, #212245b2),
+    url("../assets/images/food2.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  padding: 80px 0px;
+}

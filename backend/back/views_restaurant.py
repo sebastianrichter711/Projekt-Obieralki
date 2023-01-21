@@ -46,9 +46,8 @@ def get_restaurants():
     result = restaurants_schema.dump(all_restaurants)
     return jsonify(result)
 
-@views_restaurant.route('/by-name-or-location', methods=['GET'])
-def get_all_restaurants_by_name_or_location():
-    location = request.json['location']
+@views_restaurant.route('/<location>', methods=['GET'])
+def get_all_restaurants_by_name_or_location(location):
     location_to_request = '%' + location + '%'
     results = []
     all_restaurants_by_name = Restaurant.query.filter(Restaurant.name.like(location_to_request))

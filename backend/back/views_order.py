@@ -266,7 +266,7 @@ def update_order(order_id):
     delivery_cost = request.json['delivery_cost']
     dishes_cost = request.json['dishes_cost']
     is_completed = request.json['is_completed']
-    order_date = datetime.now()
+    order_date = request.json['order_date']
     payment_form = request.json['payment_form']
     total_cost = request.json['total_cost']
     user_id = request.json['user_id']

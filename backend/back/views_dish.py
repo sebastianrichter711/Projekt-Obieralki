@@ -49,7 +49,7 @@ def get_dish(dish_id):
 @views_dish.route('/restaurants/<uuid:restaurant_id>', methods=['GET'])
 def get_all_dishes_from_restaurant(restaurant_id):
     all_dishes = Dish.query.filter(Dish.restaurant_id==restaurant_id)
-    if len(all_dishes) == 0:
+    if all_dishes.count() == 0:
         return jsonify("Not found dishes from a restaurant " + str(restaurant_id)), 404
     result = dishes_schema.dump(all_dishes)
     return jsonify(result)
