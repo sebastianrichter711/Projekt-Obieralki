@@ -1,0 +1,102 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "sean",
+    "version": "1.0.0",
+    "title": "Seans-Python3-Flask-Rest-Boilerplate",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "twojejedzenie.pl",
+      "description": "API for application to food delivery via Internet"
+    }
+  ],
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "tags": ["User registration"],
+        "summary": "Returns email of a new user",
+        "requestBody": {
+          "description": "User register request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/registerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "id": {
+        "properties": {
+          "uuid": {
+            "type": "string"
+          }
+        }
+      },
+      "registerRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "string"
+          },
+          "password": {
+            "type": "string",
+            "format": "string"
+          },
+          "password_again": {
+            "type": "string",
+            "format": "string"
+          },
+          "active": {
+            "type": "boolean",
+            "format": "boolean"
+          },
+          "role": {
+            "type": "string",
+            "format": "string"
+          },
+          "authorize_date": {
+            "type": "string",
+            "format": "string"
+          },
+          "end_authorize_date": {
+            "type": "string",
+            "format": "string"
+          }
+        }
+      },
+      "bookRequests": {
+        "type": "object",
+        "properties": {
+          "bookRequest": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/bookRequest"
+            }
+          }
+        }
+      }
+    }
+  }
+}

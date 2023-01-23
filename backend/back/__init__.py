@@ -9,6 +9,7 @@ from datetime import timedelta
 import datetime
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash
+from flask_swagger_ui import get_swaggerui_blueprint
 
 conn="postgresql://{0}:{1}@{2}:{3}/{4}".format('postgres','postgres','localhost','5432','twojejedzenie3x')
 db = SQLAlchemy()
@@ -51,6 +52,22 @@ def create_app():
     admin.add_view(ModelView(Restaurant,db.session))
     admin.add_view(ModelView(Dish,db.session))
     admin.add_view(ModelView(Order,db.session))
+
+    @app.route('/static/<path:path>')
+    def send_static(path):
+        return send_from_directory('static', path)
+
+    SWAGGER_URL = '/swagger'
+    API_URL = '/static/swagger.json'
+    SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
+        SWAGGER_URL,
+        API_URL,
+        config={
+            'app_name': "backend"
+        }
+    )
+
+    app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
 
     with app.app_context():
         admins = User.query.filter(User.role=='admin')

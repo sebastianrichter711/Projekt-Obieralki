@@ -59,15 +59,15 @@ def get_all_dishes_from_restaurant(restaurant_id):
     result = dishes_schema.dump(all_dishes)
     return jsonify(result)
 
-@views_dish.route('/restaurants/<uuid:restaurant_id>/by-name', methods=['GET'])
-def get_all_dishes_from_restaurant_by_name(restaurant_id):
-    dish_name=request.json['name']
-    name_to_request = '%' + dish_name + '%'
-    all_dishes = Dish.query.filter(Dish.restaurant_id==restaurant_id, Dish.name.like(name_to_request))
-    if len(all_dishes) == 0:
-        return jsonify("Not found dishes by name from restaurant " + str(restaurant_id)), 404
-    result = dishes_schema.dump(all_dishes)
-    return jsonify(result)
+# @views_dish.route('/restaurants/<uuid:restaurant_id>/by-name', methods=['GET'])
+# def get_all_dishes_from_restaurant_by_name(restaurant_id):
+#     dish_name=request.json['name']
+#     name_to_request = '%' + dish_name + '%'
+#     all_dishes = Dish.query.filter(Dish.restaurant_id==restaurant_id, Dish.name.like(name_to_request))
+#     if len(all_dishes) == 0:
+#         return jsonify("Not found dishes by name from restaurant " + str(restaurant_id)), 404
+#     result = dishes_schema.dump(all_dishes)
+#     return jsonify(result)
 
 @views_dish.route('/<uuid:dish_id>', methods=['PUT'])
 def update_dish(dish_id):

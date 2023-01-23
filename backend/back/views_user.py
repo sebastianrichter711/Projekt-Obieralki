@@ -9,30 +9,6 @@ import json
 
 views_user = Blueprint('views_user', __name__)
 
-# @views_user.route('/user', methods=['POST'])
-# def add_user():
-#     active = request.json['active']
-#     address = request.json['address']
-#     authorize_date = request.json['authorize_date']
-#     birth_date = request.json['birth_date']
-#     date_created = datetime.now()
-#     date_of_last_login = None
-#     email = request.json['email']
-#     end_authorize_date = request.json['end_authorize_date']
-#     name = request.json['name']
-#     password = 'xxx'
-#     phone = request.json['phone']
-#     role = request.json['role']
-#     surname = request.json['surname']
-
-#     new_user = User(active,address,authorize_date,birth_date,date_created,date_of_last_login,email,
-#     end_authorize_date,name,password,phone,role,surname)
-
-#     db.session.add(new_user)
-#     db.session.commit()
-
-#     return user_schema.jsonify(new_user)
-
 @views_user.route('', methods=['GET'])
 def get_users():
     all_users = User.query.all()

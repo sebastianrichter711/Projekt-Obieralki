@@ -13,6 +13,7 @@ import "../styles/all-foods.css";
 import "../styles/pagination.css";
 
 import DishService from "../services/dish.service";
+import RestaurantService from "../services/restaurant.service";
 
 const AllFoods = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,6 +21,7 @@ const AllFoods = () => {
   const [pageNumber, setPageNumber] = useState(0);
 
   const [dishes, setDishes] = useState([]);
+  const [restaurant, setRestaurant] = useState("");
 
   const { id, name } = useParams();
 
@@ -32,6 +34,14 @@ const AllFoods = () => {
       console.log(res.data);
     });
   }, [setDishes]);
+
+  useEffect(() => {
+    RestaurantService.getRestaurant(id).then((res) => {
+      const gotRest = res.data;
+      setRestaurant(gotRest);
+      console.log(res.data);
+    });
+  }, [setRestaurant]);
 
   const searchedProduct = dishes.filter((item) => {
     if (searchTerm.value === "") {
@@ -90,6 +100,15 @@ const AllFoods = () => {
                 </select>
               </div>
             </Col>
+
+            <p> Lokalizacja: {restaurant.address}</p>
+            <p> Koszt dostawy: {restaurant.delivery_cost} zł</p>
+            <p> Minimalna kwota zamówienia: {restaurant.min_order_cost} zł</p>
+            <p>
+              {" "}
+              Bezpłatna dostawa od: {restaurant.min_order_cost_free_delivery} zł
+            </p>
+            <p> Czas oczekiwania: {restaurant.waiting_time_for_delivery}</p>
 
             {displayPage.map((item) => (
               <Col lg="3" md="4" sm="6" xs="6" key={item.id} className="mb-4">
