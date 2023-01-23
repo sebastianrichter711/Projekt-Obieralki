@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "description": "sean",
+    "description": "API for application to food delivery via Internet",
     "version": "1.0.0",
-    "title": "Seans-Python3-Flask-Rest-Boilerplate",
+    "title": "twojejedzenie.pl - backend",
     "license": {
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
@@ -14,16 +14,10 @@
       "url": "/"
     }
   ],
-  "tags": [
-    {
-      "name": "twojejedzenie.pl",
-      "description": "API for application to food delivery via Internet"
-    }
-  ],
   "paths": {
     "/api/auth/register": {
       "post": {
-        "tags": ["User registration"],
+        "tags": ["Authorization"],
         "summary": "Returns email of a new user",
         "requestBody": {
           "description": "User register request",
@@ -39,6 +33,130 @@
         "responses": {
           "201": {
             "description": "Created"
+          },
+          "400": {
+            "description": "Errors validation in given data"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": ["Authorization"],
+        "summary": "Returns access token of logged in user",
+        "requestBody": {
+          "description": "User login request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/loginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Errors validation in given data"
+          },
+          "404": {
+            "description": "Not found a user with given data"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "tags": ["Authorization"],
+        "summary": "Returns no content in case of logout of user",
+        "requestBody": {
+          "description": "User logout request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/registerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "404": {
+            "description": "Not found user with given token"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/auth/forgot-password": {
+      "post": {
+        "tags": ["Authorization"],
+        "summary": "Returns user password reset token",
+        "requestBody": {
+          "description": "Forgot password request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/forgotPassRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not found user with given email"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/auth/reset-password": {
+      "post": {
+        "tags": ["Authorization"],
+        "summary": "Returns confirmation of chage a user password",
+        "requestBody": {
+          "description": "User change password request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/resetPassRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Error validation in given data"
+          },
+          "404": {
+            "description": "Not found user with given token"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
@@ -61,7 +179,7 @@
             "format": "string"
           },
           "password": {
-            "type": "string",
+            "type": "password",
             "format": "string"
           },
           "password_again": {
@@ -86,14 +204,42 @@
           }
         }
       },
-      "bookRequests": {
+      "loginRequest": {
         "type": "object",
         "properties": {
-          "bookRequest": {
-            "type": "object",
-            "additionalProperties": {
-              "$ref": "#/components/schemas/bookRequest"
-            }
+          "email": {
+            "type": "string",
+            "format": "string"
+          },
+          "password": {
+            "type": "string",
+            "format": "string"
+          }
+        }
+      },
+      "forgotPassRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "string"
+          }
+        }
+      },
+      "resetPassRequest": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "format": "string"
+          },
+          "password": {
+            "type": "string",
+            "format": "string"
+          },
+          "password_again": {
+            "type": "string",
+            "format": "string"
           }
         }
       }
