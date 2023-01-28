@@ -2,8 +2,6 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 import os
-from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
 import datetime
@@ -16,7 +14,6 @@ from fastapi.middleware.wsgi import WSGIMiddleware
 conn="postgresql://{0}:{1}@{2}:{3}/{4}".format('postgres','postgres','localhost','5432','twojejedzenie3x')
 db = SQLAlchemy()
 ma=Marshmallow()
-admin=Admin()
 APP_SECRET_KEY = 'fTjWnZr4u7x!A%D*G-JaNdRgUkXp2s5v'
 ACCESS_EXPIRES = timedelta(hours=1)
 jwt=JWTManager()
@@ -37,7 +34,7 @@ def create_app():
     fastapi = FastAPI()
     fastapi.mount("/", WSGIMiddleware(app))
 
-    from .views_auth import views_auth,auth_router
+    from .views_auth import views_auth
     from .views_restaurant import views_restaurant
     from .views_dish import views_dish
     from .views_order import views_order
@@ -51,14 +48,7 @@ def create_app():
 
     #fastapi.include_router(auth_router)
 
-    admin=Admin(app)
-
     from .models import User,Restaurant,Dish,Order
-
-    admin.add_view(ModelView(User,db.session))
-    admin.add_view(ModelView(Restaurant,db.session))
-    admin.add_view(ModelView(Dish,db.session))
-    admin.add_view(ModelView(Order,db.session))
 
     with app.app_context():
         admins = User.query.filter(User.role=='admin')
