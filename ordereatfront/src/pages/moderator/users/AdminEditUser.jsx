@@ -15,26 +15,9 @@ import { FormControl } from "@mui/material";
 import AuthContext from "../../../services/AuthContext";
 import Helmet from "../../../components/Helmet/Helmet";
 import CommonSection from "../../../components/UI/common-section/CommonSection";
-import { makeStyles } from "@mui/styles";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Checkbox } from "@mui/material";
-
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: 8,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: 3,
-  },
-  // submit: {
-  //   margin: theme.spacing(3, 0, 2),
-  // },
-}));
 
 export default function AdminEditUser() {
   const navigate = useNavigate();
@@ -156,18 +139,29 @@ export default function AdminEditUser() {
     console.log(resp);
   };
 
-  const classes = useStyles();
-
   return (
     <Helmet title="Edytuj dane osobowe">
       <CommonSection title="Edytuj dane osobowe" />
       <Container component="main" maxWidth="sm">
         <CssBaseline />
-        <div className={classes.paper}>
+        <div
+          style={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
           <br />
           <br />
           <br />
-          <form className={classes.form} noValidate>
+          <form
+            style={{
+              width: "100%", // Fix IE 11 issue.
+              marginTop: 3,
+            }}
+            noValidate
+          >
             <Grid container spacing={2}>
               {"Aktywny"}
               <Checkbox onChange={handleChangeUserActive} />

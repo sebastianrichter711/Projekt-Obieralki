@@ -4,17 +4,17 @@ from typing import Optional
 from pydantic.types import conint
 
 class LoginRequest(BaseModel):
-    email: str
-    password: str
+    email: str = "user@wp.pl"
+    password: str = "User123$"
 
 class RegisterRequest(BaseModel):
-    email: str
-    password: str
-    password_again: str
-    role:str
-    authorize_date:str
-    end_authorize_date:str
-    active:bool
+    email: str = "user@wp.pl"
+    password: str = "User123$"
+    password_again: str = "User123$"
+    role:str = "user"
+    authorize_date:str = ""
+    end_authorize_date:str = ""
+    active:bool = True
 
 class ForgotPasswordRequest(BaseModel):
     email: str

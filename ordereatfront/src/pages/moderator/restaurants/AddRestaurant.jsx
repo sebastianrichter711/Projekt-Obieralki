@@ -7,20 +7,8 @@ import { TextField } from "@mui/material";
 import { Grid } from "@mui/material";
 import { Typography } from "@mui/material";
 import { Container } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import api from "../../../services/api";
 import { Checkbox } from "@mui/material";
-
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-  },
-}));
 
 export default function AddRestaurant() {
   function slugify(string) {
@@ -127,16 +115,20 @@ export default function AddRestaurant() {
     //window.location.reload();
   };
 
-  const classes = useStyles();
-
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <div className={classes.paper}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         <Typography component="h1" variant="h5">
           Dodaj restaurację
         </Typography>
-        <form className={classes.form} noValidate>
+        <form style={{ width: "100%" }} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -248,7 +240,6 @@ export default function AddRestaurant() {
             fullWidth
             variant="contained"
             color="primary"
-            className={classes.submit}
             onClick={handleSubmit}
           >
             Dodaj restaurację
