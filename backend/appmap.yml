@@ -1,0 +1,16 @@
+name: backend
+packages:
+  - path: myenv\Lib\site-packages\flask_admin\static\bootstrap\bootstrap3\css
+  - path: myenv\Lib\site-packages\flask_admin\static\bootstrap\bootstrap4\css
+  - path: myenv\Lib\site-packages\flask_admin\static\bootstrap\bootstrap4\js
+  - path: myenv\Lib\site-packages\flask_admin\static\vendor\bootstrap4
+  - path: myenv\Lib\site-packages\flask_admin\static\vendor\leaflet
+  - path: myenv\Lib\site-packages\flask_swagger_ui\dist
+  - path: myenv\Lib\site-packages\flask_admin\static\admin\js
+  - path: myenv\Lib\site-packages\flask_admin\static\bootstrap\bootstrap2\js
+  - path: myenv\Lib\site-packages\flask_admin\static\bootstrap\bootstrap3\js
+  - path: myenv\Lib\site-packages\flask_admin\static\bootstrap\bootstrap4
+  - path: myenv\Lib\site-packages\flask_admin\static\vendor
+  - path: myenv\Lib\site-packages\werkzeug\debug\shared
+language: javascript
+appmap_dir: tmp/appmap
