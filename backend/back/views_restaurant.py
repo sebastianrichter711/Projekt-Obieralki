@@ -5,10 +5,13 @@ from .models import *
 from . import db
 from .schemas import restaurant_schema, restaurants_schema
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required
+from fastapi import APIRouter
 
 views_restaurant = Blueprint('views_restaurant', __name__)
+restaurants_router=APIRouter()
 
 @views_restaurant.route('', methods=['POST'])
+@restaurants_router.post("/api/restaurants")
 def add_restaurant():
     address = request.json['address']
     delivery_cost = request.json['delivery_cost']
@@ -44,6 +47,7 @@ def add_restaurant():
         return jsonify("Error in adding a restaurant"), 422
 
 @views_restaurant.route('/', methods=['GET'])
+@restaurants_router.get("/api/restaurants")
 def get_restaurants():
     all_restaurants = Restaurant.query.all()
     if len(all_restaurants)==0:
@@ -52,6 +56,7 @@ def get_restaurants():
     return jsonify(result)
 
 @views_restaurant.route('/<location>', methods=['GET'])
+@restaurants_router.get("/api/restaurants/{location}")
 def get_all_restaurants_by_name_or_location(location):
     location_to_request = '%' + location + '%'
     results = []
@@ -83,6 +88,7 @@ def get_all_restaurants_by_name_or_location(location):
         return jsonify(result_of_search)
 
 @views_restaurant.route('/one/<uuid:restaurant_id>', methods=['GET'])
+@restaurants_router.get("/api/restaurants/one/{restaurant_id}")
 def get_restaurant(restaurant_id):
     restaurant = Restaurant.query.get(restaurant_id)
     if restaurant is None:
@@ -90,6 +96,7 @@ def get_restaurant(restaurant_id):
     return restaurant_schema.jsonify(restaurant)
 
 @views_restaurant.route('/<uuid:restaurant_id>', methods=['PUT'])
+@restaurants_router.put("/api/restaurants/{restaurant_id}")
 def update_restaurant(restaurant_id):
 
     address = request.json['address']
@@ -134,6 +141,7 @@ def update_restaurant(restaurant_id):
 
 
 @views_restaurant.route('/<uuid:restaurant_id>', methods=["DELETE"])
+@restaurants_router.delete("/api/restaurants/{restaurant_id}")
 def delete_restaurant(restaurant_id):
     try:
         restaurant = Restaurant.query.get(restaurant_id)

@@ -9,10 +9,13 @@ from sqlalchemy import select, update, delete
 import sys
 from flask_jwt_extended import get_jwt, jwt_required
 import json
+from fastapi import APIRouter
 
 views_order = Blueprint('views_order', __name__)
+orders_router=APIRouter()
 
 @views_order.route('/users/<uuid:user_id>/completed', methods=['GET'])
+@orders_router.get("/api/orders/users/{user_id}/completed")
 def get_users_orders_completed(user_id):
     all_orders = Order.query.filter(Order.user_id==user_id, Order.is_completed==True)
     if all_orders.count()==0:
@@ -21,6 +24,7 @@ def get_users_orders_completed(user_id):
     return jsonify(result)
 
 @views_order.route('/users/<uuid:user_id>/uncompleted', methods=['GET'])
+@orders_router.get("/api/orders/users/{user_id}/uncompleted")
 def get_users_orders_uncompleted(user_id):
     all_orders = Order.query.filter(Order.user_id==user_id, Order.is_completed==False)
     if all_orders.count()==0:
@@ -29,6 +33,7 @@ def get_users_orders_uncompleted(user_id):
     return jsonify(result)
 
 @views_order.route('/complete', methods=['POST'])
+@orders_router.post("/api/orders/complete")
 def complete_order():
 
     delivery_address = request.json['deliveryAddress']
@@ -79,6 +84,7 @@ def complete_order():
         return jsonify("Failure in completing an order"), 500
 
 @views_order.route('/', methods=['GET'])
+@orders_router.get("/api/orders/")
 def get_orders():
     all_orders = Order.query.all()
     if len(all_orders)==0:
@@ -87,6 +93,7 @@ def get_orders():
     return jsonify(result)
 
 @views_order.route('/<uuid:order_id>', methods=['GET'])
+@orders_router.get("/api/orders/{order_id}")
 def get_order(order_id):
     order = Order.query.get(order_id)
     if order is None:
@@ -94,6 +101,7 @@ def get_order(order_id):
     return order_schema.jsonify(order)
 
 @views_order.route('/<uuid:order_id>', methods=['PUT'])
+@orders_router.put("/api/orders/{order_id}")
 def update_order(order_id):
 
     delivery = request.json['delivery']
@@ -127,6 +135,7 @@ def update_order(order_id):
         return jsonify("Failure in modifying an order"), 422
 
 @views_order.route('/<uuid:order_id>', methods=["DELETE"])
+@orders_router.delete("/api/orders/{order_id}")
 def delete_order(order_id):
     try:
         order = Order.query.get(order_id)

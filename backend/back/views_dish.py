@@ -5,10 +5,13 @@ from .models import *
 from . import db
 from .schemas import dish_schema, dishes_schema
 from flask_jwt_extended import get_jwt, jwt_required
+from fastapi import APIRouter
 
 views_dish = Blueprint('views_dish', __name__)
+dishes_router = APIRouter()
 
 @views_dish.route('', methods=['POST'])
+@dishes_router.post("/api/dishes")
 def add_dish():
     
     try:
@@ -37,6 +40,7 @@ def add_dish():
         return jsonify("Creating a dish is not successful!"), 422
 
 @views_dish.route('/', methods=['GET'])
+@dishes_router.get("/api/dishes")
 def get_dishes():
     all_dishes = Dish.query.all()
     if len(all_dishes) == 0:
@@ -45,6 +49,7 @@ def get_dishes():
     return jsonify(result)
 
 @views_dish.route('/<uuid:dish_id>', methods=['GET'])
+@dishes_router.get("/api/dishes/{dish_id}")
 def get_dish(dish_id):
     dish = Dish.query.get(dish_id)
     if dish is None:
@@ -52,6 +57,7 @@ def get_dish(dish_id):
     return dish_schema.jsonify(dish)
 
 @views_dish.route('/restaurants/<uuid:restaurant_id>', methods=['GET'])
+@dishes_router.get("/api/dishes/restaurants/{restaurant_id}")
 def get_all_dishes_from_restaurant(restaurant_id):
     all_dishes = Dish.query.filter(Dish.restaurant_id==restaurant_id)
     if all_dishes.count() == 0:
@@ -59,17 +65,8 @@ def get_all_dishes_from_restaurant(restaurant_id):
     result = dishes_schema.dump(all_dishes)
     return jsonify(result)
 
-# @views_dish.route('/restaurants/<uuid:restaurant_id>/by-name', methods=['GET'])
-# def get_all_dishes_from_restaurant_by_name(restaurant_id):
-#     dish_name=request.json['name']
-#     name_to_request = '%' + dish_name + '%'
-#     all_dishes = Dish.query.filter(Dish.restaurant_id==restaurant_id, Dish.name.like(name_to_request))
-#     if len(all_dishes) == 0:
-#         return jsonify("Not found dishes by name from restaurant " + str(restaurant_id)), 404
-#     result = dishes_schema.dump(all_dishes)
-#     return jsonify(result)
-
 @views_dish.route('/<uuid:dish_id>', methods=['PUT'])
+@dishes_router.put("/api/dishes/{dish_id}")
 def update_dish(dish_id):
 
     description = request.json['description']
@@ -108,6 +105,7 @@ def update_dish(dish_id):
         return jsonify("Updating a dish wasn't ended successfully!"), 422
 
 @views_dish.route('/<uuid:dish_id>', methods=["DELETE"])
+@dishes_router.delete("/api/dishes/{dish_id}")
 def delete_dish(dish_id):
     try:
         dish = Dish.query.get(dish_id)

@@ -7,13 +7,16 @@ import jwt
 from .__init__ import APP_SECRET_KEY,jwt
 import datetime
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required
-# from fastapi import APIRouter
-# from .openapischemas import LoginObject
+from fastapi import APIRouter, Body, Request, Response
+from .openapischemas import LoginRequest
 # from fastapi import Request
 
 views_auth = Blueprint('views_auth', __name__)
+auth_router = APIRouter()
+
 
 @views_auth.route('/forgot-password', methods=['POST'])
+@auth_router.post('/api/auth/forgot-password')
 def forgot_password():
     user = User.query.filter(User.email==request.json["email"]).first()
     if user is None:
@@ -30,7 +33,9 @@ def check_if_token_revoked(jwt_header, jwt_payload: dict) -> bool:
     return token is not None
 
 @views_auth.route('/login', methods=['POST'])
-def login():
+@auth_router.post('/api/auth/login')
+def login(loginRequest: LoginRequest = Body()):
+    print(loginRquest)
     email = request.json['email']
     password = request.json['password']
 
@@ -48,6 +53,7 @@ def login():
     return jsonify({"accessToken": access_token}), 200
 
 @views_auth.route('/logout', methods=['POST'])
+@auth_router.post('/api/auth/logout')
 @jwt_required()
 def logout():
     jti = get_jwt()["jti"]
@@ -58,6 +64,7 @@ def logout():
     return jsonify(msg="JWT revoked")
 
 @views_auth.route('/reset-password', methods=['POST'])
+@auth_router.post('/api/auth/reset-password')
 def reset_password():
     user = User.query.filter(User.pass_reset_token==request.json["token"]).first()
     if user is None:
@@ -76,6 +83,7 @@ def reset_password():
     return jsonify("Password successfully reset.")
 
 @views_auth.route('/register', methods=['POST'])
+@auth_router.post('/api/auth/register')
 def register():
     active = request.json['active']
     email = request.json['email']

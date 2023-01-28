@@ -34,11 +34,11 @@ def create_app():
     fastapi = FastAPI()
     fastapi.mount("/", WSGIMiddleware(app))
 
-    from .views_auth import views_auth
-    from .views_restaurant import views_restaurant
-    from .views_dish import views_dish
-    from .views_order import views_order
-    from .views_user import views_user
+    from .views_auth import views_auth, auth_router
+    from .views_restaurant import views_restaurant, restaurants_router
+    from .views_dish import views_dish, dishes_router
+    from .views_order import views_order, orders_router
+    from .views_user import views_user, users_router
 
     app.register_blueprint(views_auth, url_prefix='/api/auth')
     app.register_blueprint(views_restaurant, url_prefix='/api/restaurants')
@@ -46,7 +46,11 @@ def create_app():
     app.register_blueprint(views_order, url_prefix='/api/orders')
     app.register_blueprint(views_user, url_prefix='/api/users')
 
-    #fastapi.include_router(auth_router)
+    fastapi.include_router(auth_router)
+    fastapi.include_router(restaurants_router)
+    fastapi.include_router(dishes_router)
+    fastapi.include_router(orders_router)
+    fastapi.include_router(users_router)
 
     from .models import User,Restaurant,Dish,Order
 

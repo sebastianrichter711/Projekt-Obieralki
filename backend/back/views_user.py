@@ -6,10 +6,14 @@ from . import db
 from .schemas import user_schema, users_schema
 from flask_jwt_extended import get_jwt, jwt_required
 import json
+from fastapi import APIRouter
 
 views_user = Blueprint('views_user', __name__)
+users_router=APIRouter()
+
 
 @views_user.route('', methods=['GET'])
+@users_router.get("/api/users")
 def get_users():
     all_users = User.query.all()
     if len(all_users) == 0:
@@ -18,6 +22,7 @@ def get_users():
     return jsonify(result)
 
 @views_user.route('/<uuid:user_id>', methods=['GET'])
+@users_router.get("/api/users/{user_id}")
 def get_user(user_id):
     user = User.query.get(user_id)
     if user is None:
@@ -25,6 +30,7 @@ def get_user(user_id):
     return user_schema.jsonify(user)
 
 @views_user.route('/<uuid:user_id>', methods=['PUT'])
+@users_router.put("/api/users/{user_id}")
 def update_user(user_id):
 
     active = True
@@ -69,6 +75,7 @@ def update_user(user_id):
         return jsonify("Failure in modifying an user"), 422
 
 @views_user.route('/<uuid:id>', methods=["DELETE"])
+@users_router.delete("/api/users/{id}")
 def delete_user(id):
     try:
         user = User.query.get(id)
