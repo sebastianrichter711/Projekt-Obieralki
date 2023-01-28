@@ -1,0 +1,15 @@
+version: "3"
+services:
+  postgres:
+    build: .
+    container_name: "postgres"
+    ports:
+      - "5432:5432"
+
+  core_api:
+    build: .
+    container_name: "backend_container"
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/backend
