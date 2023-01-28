@@ -12,5 +12,6 @@ packages:
   - path: myenv\Lib\site-packages\flask_admin\static\bootstrap\bootstrap4
   - path: myenv\Lib\site-packages\flask_admin\static\vendor
   - path: myenv\Lib\site-packages\werkzeug\debug\shared
+  - path: back
 language: javascript
 appmap_dir: tmp/appmap

@@ -9,7 +9,9 @@ from datetime import timedelta
 import datetime
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash
-from flask_swagger_ui import get_swaggerui_blueprint
+from fastapi import FastAPI,Request
+import uvicorn
+from fastapi.middleware.wsgi import WSGIMiddleware
 
 conn="postgresql://{0}:{1}@{2}:{3}/{4}".format('postgres','postgres','localhost','5432','twojejedzenie3x')
 db = SQLAlchemy()
@@ -19,6 +21,7 @@ APP_SECRET_KEY = 'fTjWnZr4u7x!A%D*G-JaNdRgUkXp2s5v'
 ACCESS_EXPIRES = timedelta(hours=1)
 jwt=JWTManager()
 cors = CORS()
+fastapi = FastAPI()
 
 def create_app():
     app = Flask(__name__)
@@ -31,8 +34,10 @@ def create_app():
     ma=Marshmallow(app)
     jwt=JWTManager(app)
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+    fastapi = FastAPI()
+    fastapi.mount("/", WSGIMiddleware(app))
 
-    from .views_auth import views_auth
+    from .views_auth import views_auth,auth_router
     from .views_restaurant import views_restaurant
     from .views_dish import views_dish
     from .views_order import views_order
@@ -44,6 +49,8 @@ def create_app():
     app.register_blueprint(views_order, url_prefix='/api/orders')
     app.register_blueprint(views_user, url_prefix='/api/users')
 
+    #fastapi.include_router(auth_router)
+
     admin=Admin(app)
 
     from .models import User,Restaurant,Dish,Order
@@ -52,22 +59,6 @@ def create_app():
     admin.add_view(ModelView(Restaurant,db.session))
     admin.add_view(ModelView(Dish,db.session))
     admin.add_view(ModelView(Order,db.session))
-
-    @app.route('/static/<path:path>')
-    def send_static(path):
-        return send_from_directory('static', path)
-
-    SWAGGER_URL = '/swagger'
-    API_URL = '/static/swagger.json'
-    SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
-        SWAGGER_URL,
-        API_URL,
-        config={
-            'app_name': "backend"
-        }
-    )
-
-    app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
 
     with app.app_context():
         admins = User.query.filter(User.role=='admin')
@@ -78,4 +69,4 @@ def create_app():
             db.session.add(admin)
             db.session.commit()
 
-    return app
+    return fastapi

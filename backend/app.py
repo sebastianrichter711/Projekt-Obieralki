@@ -1,6 +1,7 @@
 from back import create_app
+import uvicorn
 
 app = create_app()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    uvicorn.run(app,host='localhost',port=5000)
