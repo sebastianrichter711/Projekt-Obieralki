@@ -34,6 +34,7 @@ const RestaurantCard = (props) => {
         <div className=" d-flex align-items-center justify-content-between ">
           <span className="product__address">{address}</span>
         </div>
+        <br />
         <div>
           <p className="product__time">
             Czas oczekiwania: {waiting_time_for_delivery}

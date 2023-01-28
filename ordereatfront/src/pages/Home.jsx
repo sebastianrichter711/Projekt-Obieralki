@@ -86,12 +86,10 @@ const Home = () => {
             </Col>
           </Row>
           <br />
+          <br />
           <SearchSubpage />
         </Container>
       </section>
-
-      <br />
-      <br />
 
       <section>
         <Container>
