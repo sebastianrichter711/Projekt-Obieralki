@@ -5,14 +5,16 @@ from .models import *
 from . import db
 from .schemas import restaurant_schema, restaurants_schema
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required
-from fastapi import APIRouter
+from fastapi import APIRouter, Body
+from .openapi_schemas import RestaurantRequest
+
 
 views_restaurant = Blueprint('views_restaurant', __name__)
 restaurants_router=APIRouter()
 
 @views_restaurant.route('', methods=['POST'])
 @restaurants_router.post("/api/restaurants")
-def add_restaurant():
+def add_restaurant(restaurantRequest: RestaurantRequest=Body()):
     address = request.json['address']
     delivery_cost = request.json['delivery_cost']
     description = request.json['description']
@@ -97,7 +99,7 @@ def get_restaurant(restaurant_id):
 
 @views_restaurant.route('/<uuid:restaurant_id>', methods=['PUT'])
 @restaurants_router.put("/api/restaurants/{restaurant_id}")
-def update_restaurant(restaurant_id):
+def update_restaurant(restaurant_id, restaurantRequest: RestaurantRequest=Body()):
 
     address = request.json['address']
     delivery_cost = request.json['delivery_cost']

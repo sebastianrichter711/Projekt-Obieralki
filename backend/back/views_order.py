@@ -9,7 +9,8 @@ from sqlalchemy import select, update, delete
 import sys
 from flask_jwt_extended import get_jwt, jwt_required
 import json
-from fastapi import APIRouter
+from fastapi import APIRouter, Body
+from .openapi_schemas import OrderRequest, CompleteOrderRequest
 
 views_order = Blueprint('views_order', __name__)
 orders_router=APIRouter()
@@ -34,7 +35,7 @@ def get_users_orders_uncompleted(user_id):
 
 @views_order.route('/complete', methods=['POST'])
 @orders_router.post("/api/orders/complete")
-def complete_order():
+def complete_order(completeOrderRequest:CompleteOrderRequest=Body()):
 
     delivery_address = request.json['deliveryAddress']
     delivery_cost = request.json['deliveryCost']
@@ -102,7 +103,7 @@ def get_order(order_id):
 
 @views_order.route('/<uuid:order_id>', methods=['PUT'])
 @orders_router.put("/api/orders/{order_id}")
-def update_order(order_id):
+def update_order(order_id, orderRequest:OrderRequest=Body()):
 
     delivery = request.json['delivery']
     delivery_cost = request.json['delivery_cost']

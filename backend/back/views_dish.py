@@ -5,14 +5,15 @@ from .models import *
 from . import db
 from .schemas import dish_schema, dishes_schema
 from flask_jwt_extended import get_jwt, jwt_required
-from fastapi import APIRouter
+from fastapi import APIRouter, Body
+from .openapi_schemas import DishRequest
 
 views_dish = Blueprint('views_dish', __name__)
 dishes_router = APIRouter()
 
 @views_dish.route('', methods=['POST'])
 @dishes_router.post("/api/dishes")
-def add_dish():
+def add_dish(dishRequest: DishRequest=Body()):
     
     try:
 
@@ -67,7 +68,7 @@ def get_all_dishes_from_restaurant(restaurant_id):
 
 @views_dish.route('/<uuid:dish_id>', methods=['PUT'])
 @dishes_router.put("/api/dishes/{dish_id}")
-def update_dish(dish_id):
+def update_dish(dish_id, dishRequest: DishRequest=Body()):
 
     description = request.json['description']
     dish_subtype = request.json['dish_subtype']

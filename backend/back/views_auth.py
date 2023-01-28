@@ -8,16 +8,14 @@ from .__init__ import APP_SECRET_KEY,jwt
 import datetime
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required
 from fastapi import APIRouter, Body, Request, Response
-from .openapischemas import LoginRequest
-# from fastapi import Request
+from .openapi_schemas import LoginRequest, RegisterRequest, ForgotPasswordRequest, ResetPasswordRequest
 
 views_auth = Blueprint('views_auth', __name__)
 auth_router = APIRouter()
 
-
 @views_auth.route('/forgot-password', methods=['POST'])
 @auth_router.post('/api/auth/forgot-password')
-def forgot_password():
+def forgot_password(forgotPassRequest: ForgotPasswordRequest = Body()):
     user = User.query.filter(User.email==request.json["email"]).first()
     if user is None:
         return jsonify("User with email " + request.json["email"] + "not_found"), 404
@@ -35,7 +33,6 @@ def check_if_token_revoked(jwt_header, jwt_payload: dict) -> bool:
 @views_auth.route('/login', methods=['POST'])
 @auth_router.post('/api/auth/login')
 def login(loginRequest: LoginRequest = Body()):
-    print(loginRquest)
     email = request.json['email']
     password = request.json['password']
 
@@ -65,7 +62,7 @@ def logout():
 
 @views_auth.route('/reset-password', methods=['POST'])
 @auth_router.post('/api/auth/reset-password')
-def reset_password():
+def reset_password(resetPassRequest: ResetPasswordRequest = Body()):
     user = User.query.filter(User.pass_reset_token==request.json["token"]).first()
     if user is None:
         return jsonify("User not found"), 404
@@ -84,7 +81,7 @@ def reset_password():
 
 @views_auth.route('/register', methods=['POST'])
 @auth_router.post('/api/auth/register')
-def register():
+def register(registerRequest: RegisterRequest = Body()):
     active = request.json['active']
     email = request.json['email']
     password = request.json['password']

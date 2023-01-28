@@ -6,11 +6,11 @@ from . import db
 from .schemas import user_schema, users_schema
 from flask_jwt_extended import get_jwt, jwt_required
 import json
-from fastapi import APIRouter
+from fastapi import APIRouter, Body
+from .openapi_schemas import UserRequest
 
 views_user = Blueprint('views_user', __name__)
 users_router=APIRouter()
-
 
 @views_user.route('', methods=['GET'])
 @users_router.get("/api/users")
@@ -31,7 +31,7 @@ def get_user(user_id):
 
 @views_user.route('/<uuid:user_id>', methods=['PUT'])
 @users_router.put("/api/users/{user_id}")
-def update_user(user_id):
+def update_user(user_id, userRequest: UserRequest=Body()):
 
     active = True
     address = request.json['address']
