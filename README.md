@@ -14,6 +14,19 @@ specjalność: Oprogramowanie systemowe.
 
 ## Instrukcja uruchomienia aplikacji
 
+Aby poprawnie wyświetliła się mapa na stronie głównej należy wykonać następujące kroki:
+
+1. Założyć konto w serwisie https://www.maptiler.com/
+2. Wygenerować klucz umożliwiający dostęp do map z całego świata. Po wygenerowaniu na stronie https://cloud.maptiler.com/maps/ należy przejść do zakładki API Keys
+   i skopiować uzyskany klucz.
+3. W lokalizacji ordereatfront/src/components/maps należy utworzyć plik mapkey.js i w nim umieścić następujący kod źródłowy.
+
+```js
+const MAP_KEY = <YOUR_API_KEY>;
+
+export default MAP_KEY;
+```
+
 1. Zainstalować Dockera wraz z narzędziem Docker Desktop.
 2. Przejść do folderu backend, otworzyć wiersz poleceń i wpisać komendę docker-compose up, aby uruchomić backend.
 3. Przejść do folderu ordereatfront, otworzyć wiersz poleceń i wpisać komendę docker-compose up, aby uruchomić frontend. W razie problemów, wpisać w wierszu poleceń
