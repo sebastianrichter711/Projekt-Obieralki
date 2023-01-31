@@ -59,7 +59,8 @@ specjalność: Oprogramowanie systemowe.
 
 ## API wykorzystane w projekcie
 
-Dokumentacja API utworzona przy użyciu platformy FastAPI po uruchomieniu projektu backendu dostępna jest pod adresem http://localhost:5000/docs
+Dokumentacja API utworzona przy użyciu platformy FastAPI wraz z opisem niezbędnych parametrów oraz zwracanych kodów HTTP po uruchomieniu projektu backendu dostępna jest
+pod adresem http://localhost:5000/docs
 
 ![alt text](doc/apicz1.png)
 ![alt text](doc/apicz2.png)
