@@ -14,8 +14,9 @@ views_auth = Blueprint('views_auth', __name__)
 auth_router = APIRouter()
 
 @views_auth.route('/forgot-password', methods=['POST'])
-@auth_router.post('/api/auth/forgot-password')
-def forgot_password(forgotPassRequest: ForgotPasswordRequest = Body()):
+@auth_router.post('/api/auth/forgot-password', tags=["Auth"], description="Endpoint for reset user password", 
+responses={200: {"description": "User password was reset"}, 404: {"description": "Not found user with given email"}, 500: {"description":"Internal server error"}})
+def forgot_password(forgotPassRequest: ForgotPasswordRequest = Body(description="Forgot password request")):
     user = User.query.filter(User.email==request.json["email"]).first()
     if user is None:
         return jsonify("User with email " + request.json["email"] + "not_found"), 404
@@ -31,8 +32,10 @@ def check_if_token_revoked(jwt_header, jwt_payload: dict) -> bool:
     return token is not None
 
 @views_auth.route('/login', methods=['POST'])
-@auth_router.post('/api/auth/login')
-def login(loginRequest: LoginRequest = Body()):
+@auth_router.post('/api/auth/login', tags=["Auth"], description="User login", 
+responses={200: {"description": "User was logged in, returned access token"}, 400: {"description": "Error validation in given data"}, 
+404: {"description": "Not found user with given email or/and password"}, 500: {"description":"Internal server error"}})
+def login(loginRequest: LoginRequest = Body(description="Login request")):
     email = request.json['email']
     password = request.json['password']
 
@@ -50,7 +53,9 @@ def login(loginRequest: LoginRequest = Body()):
     return jsonify({"accessToken": access_token}), 200
 
 @views_auth.route('/logout', methods=['POST'])
-@auth_router.post('/api/auth/logout')
+@auth_router.post('/api/auth/logout', tags=["Auth"], description="User logout", 
+responses={204: {"description": "User was correctly logged out"}, 401: {"description": "Returns unauthorized user"}, 
+404: {"description": "Not found user with given token"}, 500: {"description": "Internal server error"}})
 @jwt_required()
 def logout():
     jti = get_jwt()["jti"]
@@ -61,8 +66,10 @@ def logout():
     return jsonify(msg="JWT revoked")
 
 @views_auth.route('/reset-password', methods=['POST'])
-@auth_router.post('/api/auth/reset-password')
-def reset_password(resetPassRequest: ResetPasswordRequest = Body()):
+@auth_router.post('/api/auth/reset-password', tags=["Auth"], description="User change password", 
+responses={200: {"description": "User password was changed"}, 400: {"description": "Error validation in given passwords"}, 
+404: {"description": "Not found user with given token"}, 500: {"description":"Internal server error"}})
+def reset_password(resetPassRequest: ResetPasswordRequest = Body(description="Reset password request")):
     user = User.query.filter(User.pass_reset_token==request.json["token"]).first()
     if user is None:
         return jsonify("User not found"), 404
@@ -80,8 +87,10 @@ def reset_password(resetPassRequest: ResetPasswordRequest = Body()):
     return jsonify("Password successfully reset.")
 
 @views_auth.route('/register', methods=['POST'])
-@auth_router.post('/api/auth/register')
-def register(registerRequest: RegisterRequest = Body()):
+@auth_router.post('/api/auth/register', tags=["Auth"], description="User registration", 
+responses={201: {"description": "User was created"}, 400: {"description": "Error validation in given data"}, 
+500: {"description":"Internal server error"}})
+def register(registerRequest: RegisterRequest = Body(description="Register request")):
     active = request.json['active']
     email = request.json['email']
     password = request.json['password']

@@ -5,7 +5,7 @@ from .models import *
 from . import db
 from .schemas import restaurant_schema, restaurants_schema
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Path
 from .openapi_schemas import RestaurantRequest
 
 
@@ -13,8 +13,10 @@ views_restaurant = Blueprint('views_restaurant', __name__)
 restaurants_router=APIRouter()
 
 @views_restaurant.route('', methods=['POST'])
-@restaurants_router.post("/api/restaurants")
-def add_restaurant(restaurantRequest: RestaurantRequest=Body()):
+@restaurants_router.post("/api/restaurants",tags=["Restaurants"], description="Add restaurant to DB", 
+responses={201: {"description": "Restaurant was created"}, 400: {"description": "Error validation in given data"}, 
+401: {"description": "Unauthorized user tried to add a restaurant"}, 500: {"description":"Internal server error"}})
+def add_restaurant(restaurantRequest: RestaurantRequest=Body(description="A restaurant request data")):
     address = request.json['address']
     delivery_cost = request.json['delivery_cost']
     description = request.json['description']
@@ -46,10 +48,12 @@ def add_restaurant(restaurantRequest: RestaurantRequest=Body()):
         return restaurant_schema.jsonify(new_restaurant), 201
     except Exception as e:
         print(e)
-        return jsonify("Error in adding a restaurant"), 422
+        return jsonify("Error in adding a restaurant"), 500
 
 @views_restaurant.route('/', methods=['GET'])
-@restaurants_router.get("/api/restaurants")
+@restaurants_router.get("/api/restaurants",tags=["Restaurants"], description="Get all restaurants", 
+responses={200: {"description": "Returns all restaurants"}, 404: {"description": "Not found restaurants"}, 
+401: {"description": "Unauthorized user tried to get all restaurants"}, 500: {"description":"Internal server error"}})
 def get_restaurants():
     all_restaurants = Restaurant.query.all()
     if len(all_restaurants)==0:
@@ -58,8 +62,10 @@ def get_restaurants():
     return jsonify(result)
 
 @views_restaurant.route('/<location>', methods=['GET'])
-@restaurants_router.get("/api/restaurants/{location}")
-def get_all_restaurants_by_name_or_location(location):
+@restaurants_router.get("/api/restaurants/{location}",tags=["Restaurants"], description="Get all restaurants by given name/location", 
+responses={200: {"description": "Returns all restaurants by given name/location"}, 404: {"description": "Not found restaurants"}, 
+500: {"description":"Internal server error"}})
+def get_all_restaurants_by_name_or_location(location=Path(description="Location or a part of restaurant name given by user")):
     location_to_request = '%' + location + '%'
     results = []
     all_restaurants_by_name = Restaurant.query.filter(Restaurant.name.like(location_to_request))
@@ -90,16 +96,20 @@ def get_all_restaurants_by_name_or_location(location):
         return jsonify(result_of_search)
 
 @views_restaurant.route('/one/<uuid:restaurant_id>', methods=['GET'])
-@restaurants_router.get("/api/restaurants/one/{restaurant_id}")
-def get_restaurant(restaurant_id):
+@restaurants_router.get("/api/restaurants/one/{restaurant_id}",tags=["Restaurants"], description="Get restaurant by its ID", 
+responses={200: {"description": "Returns got restaurant"}, 404: {"description": "Not found restaurant"},
+500: {"description":"Internal server error"}})
+def get_restaurant(restaurant_id = Path(description="An ID of restaurant")):
     restaurant = Restaurant.query.get(restaurant_id)
     if restaurant is None:
         return jsonify("Restaurant not found"), 404
     return restaurant_schema.jsonify(restaurant)
 
 @views_restaurant.route('/<uuid:restaurant_id>', methods=['PUT'])
-@restaurants_router.put("/api/restaurants/{restaurant_id}")
-def update_restaurant(restaurant_id, restaurantRequest: RestaurantRequest=Body()):
+@restaurants_router.put("/api/restaurants/{restaurant_id}",tags=["Restaurants"], description="Update of restaurant data", 
+responses={200: {"description": "Restaurant was updated"}, 400: {"description": "Error validation in given data"}, 
+401: {"description": "Unauthorized user tried to modify a restaurant"}, 404: {"description": "Not found restaurant"}, 500: {"description":"Internal server error"}})
+def update_restaurant(restaurant_id = Path(description="An ID of restaurant"), restaurantRequest: RestaurantRequest=Body(description="A restaurant request data")):
 
     address = request.json['address']
     delivery_cost = request.json['delivery_cost']
@@ -139,12 +149,14 @@ def update_restaurant(restaurant_id, restaurantRequest: RestaurantRequest=Body()
         return restaurant_schema.jsonify(restaurant)
     except Exception as e:
         print(e)
-        return jsonify("Failure in modifying a restaurant"), 422
+        return jsonify("Failure in modifying a restaurant"), 500
 
 
 @views_restaurant.route('/<uuid:restaurant_id>', methods=["DELETE"])
-@restaurants_router.delete("/api/restaurants/{restaurant_id}")
-def delete_restaurant(restaurant_id):
+@restaurants_router.delete("/api/restaurants/{restaurant_id}",tags=["Restaurants"], description="Delete a restaurant", 
+responses={200: {"description": "Restaurant was deleted"}, 404: {"description": "Not found restaurant"},
+401: {"description": "Unauthorized user tried to delete a restaurant"}, 500: {"description":"Internal server error"}})
+def delete_restaurant(restaurant_id = Path(description="An ID of restaurant")):
     try:
         restaurant = Restaurant.query.get(restaurant_id)
         if restaurant is None:
@@ -154,4 +166,4 @@ def delete_restaurant(restaurant_id):
         return jsonify("Restaurant " + str(restaurant_id) + " was succesfully deleted!")
     except Exception as e:
         print(e)
-        return jsonify("Failure in deleting a restaurant"), 422
+        return jsonify("Failure in deleting a restaurant"), 500

@@ -1,15 +1,21 @@
-version: "3"
+version: "3.8"
 services:
-  postgres:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: twojejedzenie3x
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      ports: "5432:5432"
+  web:
     build: .
-    container_name: "postgres"
-    ports:
-      - "5432:5432"
-
-  core_api:
-    build: .
-    container_name: "backend_container"
+    command: python app.py
     ports:
       - "5000:5000"
-    volumes:
-      - .:/backend
+    depends_on:
+      - db
+    environment:
+      POSTGRES_DB: twojejedzenie3x
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      DB_HOST: db

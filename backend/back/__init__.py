@@ -9,9 +9,37 @@ from flask_cors import CORS
 from werkzeug.security import generate_password_hash
 from fastapi import FastAPI,Request
 import uvicorn
-from fastapi.middleware.wsgi import WSGIMiddleware
+from fastapi.middleware.wsgi import WSGIMiddleware  
 
 conn="postgresql://{0}:{1}@{2}:{3}/{4}".format('postgres','postgres','localhost','5432','twojejedzenie3x')
+#conn="postgresql:///twojejedzenie3x?host=/run/postgresql"
+#conn="postgresql://postgres:postgres@db:5432/twojejedzenie3x"
+
+
+tags_metadata = [
+    {
+        "name": "Auth",
+        "description": "Requests (API) for user authentication/authorization.",
+    },
+    {
+        "name": "Users",
+        "description": "Requests (API) for management of users data.",
+    },
+    {
+        "name": "Orders",
+        "description": "Requests (API) for management of orders data and completing orders.",
+    },
+    {
+        "name": "Restaurants",
+        "description": "Requests (API) for management of restaurants data",
+    },
+    {
+        "name": "Dishes",
+        "description": "Requests (API) for management of dishes data",
+    },
+]
+
+
 db = SQLAlchemy()
 ma=Marshmallow()
 APP_SECRET_KEY = 'fTjWnZr4u7x!A%D*G-JaNdRgUkXp2s5v'
@@ -31,7 +59,7 @@ def create_app():
     ma=Marshmallow(app)
     jwt=JWTManager(app)
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
-    fastapi = FastAPI()
+    fastapi = FastAPI(openapi_tags=tags_metadata)
     fastapi.mount("/", WSGIMiddleware(app))
 
     from .views_auth import views_auth, auth_router
@@ -55,6 +83,9 @@ def create_app():
     from .models import User,Restaurant,Dish,Order
 
     with app.app_context():
+
+        db.create_all()
+
         admins = User.query.filter(User.role=='admin')
         if admins.count()==0:
             admin = User(active=True, date_created=datetime.datetime.utcnow(), email="admin@admin.pl", password=generate_password_hash(

@@ -6,14 +6,16 @@ from . import db
 from .schemas import user_schema, users_schema
 from flask_jwt_extended import get_jwt, jwt_required
 import json
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Path
 from .openapi_schemas import UserRequest
 
 views_user = Blueprint('views_user', __name__)
 users_router=APIRouter()
 
 @views_user.route('', methods=['GET'])
-@users_router.get("/api/users")
+@users_router.get("/api/users",tags=["Users"], description="Get all users", 
+responses={200: {"description": "Returns all users"}, 404: {"description": "Not found users"}, 
+401: {"description": "Unauthorized user tried to get all users"}, 500: {"description":"Internal server error"}})
 def get_users():
     all_users = User.query.all()
     if len(all_users) == 0:
@@ -22,16 +24,20 @@ def get_users():
     return jsonify(result)
 
 @views_user.route('/<uuid:user_id>', methods=['GET'])
-@users_router.get("/api/users/{user_id}")
-def get_user(user_id):
+@users_router.get("/api/users/{user_id}",tags=["Users"], description="Get user by its ID", 
+responses={200: {"description": "Returns got user data"}, 404: {"description": "Not found user"},
+401: {"description": "Unauthorized user tried to get data of user by its ID"}, 500: {"description":"Internal server error"}})
+def get_user(user_id = Path(description="An ID of user")):
     user = User.query.get(user_id)
     if user is None:
         return jsonify("User not found!"), 404
     return user_schema.jsonify(user)
 
 @views_user.route('/<uuid:user_id>', methods=['PUT'])
-@users_router.put("/api/users/{user_id}")
-def update_user(user_id, userRequest: UserRequest=Body()):
+@users_router.put("/api/users/{user_id}",tags=["Users"], description="Update of user data", 
+responses={200: {"description": "User was updated"}, 400: {"description": "Error validation in given data"}, 
+401: {"description": "Unauthorized user tried to modify an user"}, 404: {"description": "Not found user"}, 500: {"description":"Internal server error"}})
+def update_user(user_id = Path(description="An ID of user"), userRequest: UserRequest=Body(description="An user request data")):
 
     active = True
     address = request.json['address']
@@ -72,11 +78,13 @@ def update_user(user_id, userRequest: UserRequest=Body()):
         return user_schema.jsonify(user)
     except Exception as e:
         print(e)
-        return jsonify("Failure in modifying an user"), 422
+        return jsonify("Failure in modifying an user"), 500
 
 @views_user.route('/<uuid:id>', methods=["DELETE"])
-@users_router.delete("/api/users/{id}")
-def delete_user(id):
+@users_router.delete("/api/users/{id}",tags=["Users"], description="Delete an user", 
+responses={200: {"description": "User was deleted"}, 404: {"description": "Not found user"},
+401: {"description": "Unauthorized user tried to delete an user"}, 500: {"description":"Internal server error"}})
+def delete_user(id = Path(description="An ID of user")):
     try:
         user = User.query.get(id)
         if user is None:

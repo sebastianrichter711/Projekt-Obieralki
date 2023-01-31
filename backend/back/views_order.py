@@ -9,15 +9,17 @@ from sqlalchemy import select, update, delete
 import sys
 from flask_jwt_extended import get_jwt, jwt_required
 import json
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Path
 from .openapi_schemas import OrderRequest, CompleteOrderRequest
 
 views_order = Blueprint('views_order', __name__)
 orders_router=APIRouter()
 
 @views_order.route('/users/<uuid:user_id>/completed', methods=['GET'])
-@orders_router.get("/api/orders/users/{user_id}/completed")
-def get_users_orders_completed(user_id):
+@orders_router.get("/api/orders/users/{user_id}/completed",tags=["Orders"], description="Get completed orders of user by its id", 
+responses={200: {"description": "Returns all completed user's orders"}, 404: {"description": "Not found completed orders of user"}, 
+401: {"description": "Returns unauthorized user"}, 500: {"description":"Internal server error"}})
+def get_users_orders_completed(user_id = Path(description="An ID of user")):
     all_orders = Order.query.filter(Order.user_id==user_id, Order.is_completed==True)
     if all_orders.count()==0:
         return jsonify("Orders not found"), 404
@@ -25,8 +27,10 @@ def get_users_orders_completed(user_id):
     return jsonify(result)
 
 @views_order.route('/users/<uuid:user_id>/uncompleted', methods=['GET'])
-@orders_router.get("/api/orders/users/{user_id}/uncompleted")
-def get_users_orders_uncompleted(user_id):
+@orders_router.get("/api/orders/users/{user_id}/uncompleted",tags=["Orders"], description="Get uncompleted orders of user by its id", 
+responses={200: {"description": "Returns all uncompleted user's orders"}, 404: {"description": "Not found uncompleted orders of user"}, 
+401: {"description": "Returns unauthorized user"}, 500: {"description":"Internal server error"}})
+def get_users_orders_uncompleted(user_id = Path(description="An ID of user")):
     all_orders = Order.query.filter(Order.user_id==user_id, Order.is_completed==False)
     if all_orders.count()==0:
         return jsonify("Orders not found"), 404
@@ -34,8 +38,10 @@ def get_users_orders_uncompleted(user_id):
     return jsonify(result)
 
 @views_order.route('/complete', methods=['POST'])
-@orders_router.post("/api/orders/complete")
-def complete_order(completeOrderRequest:CompleteOrderRequest=Body()):
+@orders_router.post("/api/orders/complete",tags=["Orders"], description="Complete user's order from restaurant", 
+responses={200: {"description": "Order was completed"}, 400: {"description": "Error validation in summary data"}, 
+401: {"description": "Unauthorized user tried to complete an order"}, 404: {"description": "Not found user or restaurant"}, 500: {"description":"Internal server error"}})
+def complete_order(completeOrderRequest:CompleteOrderRequest=Body(description="Order summary data")):
 
     delivery_address = request.json['deliveryAddress']
     delivery_cost = request.json['deliveryCost']
@@ -85,7 +91,9 @@ def complete_order(completeOrderRequest:CompleteOrderRequest=Body()):
         return jsonify("Failure in completing an order"), 500
 
 @views_order.route('/', methods=['GET'])
-@orders_router.get("/api/orders/")
+@orders_router.get("/api/orders/",tags=["Orders"], description="Get all orders", 
+responses={200: {"description": "Returns all orders"}, 404: {"description": "Not found orders"}, 
+401: {"description": "Unauthorized user tried to get all orders"}, 500: {"description":"Internal server error"}})
 def get_orders():
     all_orders = Order.query.all()
     if len(all_orders)==0:
@@ -94,16 +102,20 @@ def get_orders():
     return jsonify(result)
 
 @views_order.route('/<uuid:order_id>', methods=['GET'])
-@orders_router.get("/api/orders/{order_id}")
-def get_order(order_id):
+@orders_router.get("/api/orders/{order_id}",tags=["Orders"], description="Get order by its ID", 
+responses={200: {"description": "Returns got order"}, 404: {"description": "Not found order"},
+401: {"description": "Unauthorized user tried to get an order"}, 500: {"description":"Internal server error"}})
+def get_order(order_id = Path(description="An ID of order")):
     order = Order.query.get(order_id)
     if order is None:
         return jsonify("Order not found"), 404
     return order_schema.jsonify(order)
 
 @views_order.route('/<uuid:order_id>', methods=['PUT'])
-@orders_router.put("/api/orders/{order_id}")
-def update_order(order_id, orderRequest:OrderRequest=Body()):
+@orders_router.put("/api/orders/{order_id}",tags=["Orders"], description="Update of order data", 
+responses={200: {"description": "Order was updated"}, 400: {"description": "Error validation in given data"}, 
+401: {"description": "Unauthorized user tried to modify an order"}, 404: {"description": "Not found order"}, 500: {"description":"Internal server error"}})
+def update_order(order_id = Path(description="An ID of order"), orderRequest:OrderRequest = Body(description="An order request data")):
 
     delivery = request.json['delivery']
     delivery_cost = request.json['delivery_cost']
@@ -133,11 +145,13 @@ def update_order(order_id, orderRequest:OrderRequest=Body()):
 
         return order_schema.jsonify(order)
     except:
-        return jsonify("Failure in modifying an order"), 422
+        return jsonify("Failure in modifying an order"), 500
 
 @views_order.route('/<uuid:order_id>', methods=["DELETE"])
-@orders_router.delete("/api/orders/{order_id}")
-def delete_order(order_id):
+@orders_router.delete("/api/orders/{order_id}",tags=["Orders"], description="Delete an order", 
+responses={200: {"description": "Order was deleted"}, 404: {"description": "Not found order"},
+401: {"description": "Unauthorized user tried to delete an order"}, 500: {"description":"Internal server error"}})
+def delete_order(order_id = Path(description="An ID of order")):
     try:
         order = Order.query.get(order_id)
         if order is None:
