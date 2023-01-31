@@ -55,7 +55,7 @@ specjalność: Oprogramowanie systemowe.
 1. Po zalogowaniu się w serwisie jako administrator, w nagłówku strony pojawi się dodatowy przycisk "Panel admina". Po jego kliknięciu pojawi się panel administracyjny,
    w którym może on zarządzać użytkownikami, restauracjami, daniami oraz zamówieniami (dodawanie (za wyjątkiem zamówień), edytowanie, wyświetlanie oraz usuwanie). W sytuacji,
    gdy pojawi się np. błąd w zamówieniu, możliwe jest wprowadzenie korekty.
-2. Możliwość korzystania z wszytkich funkcjonalności systemu.
+2. Możliwość korzystania z wszystkich funkcjonalności systemu.
 
 ## API wykorzystane w projekcie
 
