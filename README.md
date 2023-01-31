@@ -16,7 +16,8 @@ specjalność: Oprogramowanie systemowe.
 
 1. Zainstalować Dockera wraz z narzędziem Docker Desktop.
 2. Przejść do folderu backend, otworzyć wiersz poleceń i wpisać komendę docker-compose up, aby uruchomić backend.
-3. Przejść do folderu ordereatfront, otworzyć wiersz poleceń i wpisać komendę docker-compose up, aby uruchomić frontend.
+3. Przejść do folderu ordereatfront, otworzyć wiersz poleceń i wpisać komendę docker-compose up, aby uruchomić frontend. W razie problemów, wpisać w wierszu poleceń
+   komendę npm install.
 4. Gdy uruchomi się frontend i backend, otworzyć przeglądarkę internetową i wpisać w niej adres https://localhost:3000.
 
 ## Zasada działania aplikacji dla poszczególnych użytkowników
@@ -26,8 +27,11 @@ specjalność: Oprogramowanie systemowe.
 1. Może wyszukiwać restauracje znajdujące się w lub w pobliżu podanej przez niego lokalizacji. Na stronie głównej użytkownik
    podaje lokalizację, następnie pokazuje się lista 10 wyników najbardziej zbliżonych do jego zapytania. Użytkownik wybiera jedną z nich, a następnie
    naciska przycisk "Znajdź restuaracje", by wyświetlić listę restauracji znajdujących się w pobliżu wybranej lokalizacji.
-2. Użytkownik z uzyskanej listy wybiera jedną z restauracji i przechodzi do widoku z najważniejszymi informacjami dot. restauracji oraz listą dań przez nią
-   oferowanych. Można przejść do szczegółów danej potrawy, klikając na jego nazwę, albo dodać ją do koszyka. W koszyku można zmieniać ilość zamawianych dań.
+2. Użytkownik z uzyskanej listy wybiera jedną z restauracji i przechodzi do widoku z najważniejszymi informacjami dot. restauracji (lokalizacja, koszt dostawy,
+   czas oczekiwania na dostawę, minimalna kwota zamówienia za dania w celu złożenia zamówienia z wybranej restauracji) oraz listą dań przez nią
+   oferowanych. Można przejść do szczegółów danej potrawy (takie jak nazwa, cena, kategoria, opis), klikając na jego nazwę, albo dodać ją do koszyka.
+   W koszyku można zmieniać ilość zamawianych dań do momentu przejścia do podsumowania zamówienia. Aby przejść do złożenia zamówienia, należy posiadać konto w serwisie,
+   być zalogowanym oraz mieć niepusty koszyk dań.
 3. Na stronie z listą dań dla danej restauracji można wyszukiwać dania po podanej nazwie.
 4. Niezalogowany użytkownik może sprawdzić koszyk na specjalnie dedykowanej stronie.
 5. Może założyć konto w serwisie, pamiętając jednocześnie o tym, by jego adres e-mail składał się z @ oraz by jego hasło miało min. 8 znaków i zawierało co najmniej
@@ -47,10 +51,14 @@ specjalność: Oprogramowanie systemowe.
 2. Zalogowany użytkownik ma dostęp do panelu użytkownika, w którym może sprawdzić swoje dane osobowe, edytować je, usunąć konto, zmienić hasło lub przejść do strony
    z widokiem listy zrealizowanych oraz niezrealizowanych zamówień przez niego złożonych.
 3. Możliwość wylogowania się z portalu.
+4. Możliwość korzystania z opcji dostępnych dla niezalogowanego użytkownika za wyjątkiem rejestracji i logowania.
 
 - **Administrator**
 
-1. Po zalogowaniu się w serwisie jako administrator, w nagłówku
+1. Po zalogowaniu się w serwisie jako administrator, w nagłówku strony pojawi się dodatowy przycisk "Panel admina". Po jego kliknięciu pojawi się panel administracyjny,
+   w którym może on zarządzać użytkownikami, restauracjami, daniami oraz zamówieniami (dodawanie (za wyjątkiem zamówień), edytowanie, wyświetlanie oraz usuwanie). W sytuacji,
+   gdy pojawi się np. błąd w zamówieniu, możliwe jest wprowadzenie korekty.
+2. Możliwość korzystania z wszytkich funkcjonalności systemu.
 
 ## API wykorzystane w projekcie
 
