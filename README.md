@@ -22,12 +22,18 @@ specjalność: Oprogramowanie systemowe.
 ## Zasada działania aplikacji dla poszczególnych użytkowników
 
 - **Niezalogowany użytkownik**
+- Może wyszukiwać restauracje znajdujące się w lub w pobliżu podanej przez niego lokalizacji. Na stronie głównej użytkownik
+  podaje lokalizację, następnie pokazuje się lista 10 wyników najbardziej zbliżonych do jego zapytania. Użytkownik wybiera jedną z nich, a następnie
+  naciska przycisk "Znajdź restuaracje", by wyświetlić listę restauracji znajdujących się w pobliżu wybranej lokalizacji.
+- Po wyborze
 
 - **Zalogowany użytkownik**
 
 - **Administrator**
 
 ## API wykorzystane w projekcie
+
+Dokumentacja API utworzona przy użyciu platformy FastAPI po uruchomieniu projektu backendu dostępna jest pod adresem http://localhost:5000/docs
 
 ![alt text](doc/apicz1.png)
 ![alt text](doc/apicz2.png)
