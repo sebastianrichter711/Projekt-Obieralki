@@ -14,7 +14,7 @@ specjalność: Oprogramowanie systemowe.
 
 ## Instrukcja uruchomienia aplikacji
 
-- a) wyświetlenie mapy z OpenStreetMap
+**Wyświetlenie mapy z OpenStreetMap**
 
 Aby poprawnie wyświetliła się mapa na stronie głównej należy wykonać następujące kroki:
 
@@ -29,7 +29,7 @@ const MAP_KEY = <YOUR_API_KEY>;
 export default MAP_KEY;
 ```
 
-- b) uruchomienie aplikacji
+**Uruchomienie aplikacji**
 
 1. Zainstalować Dockera wraz z narzędziem Docker Desktop.
 2. Przejść do folderu backend, otworzyć wiersz poleceń i wpisać komendę docker-compose up, aby uruchomić backend.
