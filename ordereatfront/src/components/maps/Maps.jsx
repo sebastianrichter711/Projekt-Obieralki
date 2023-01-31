@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import MAP_KEY from "./mapkey";
 
 const icon = L.icon({
   iconUrl: "./placeholder.png",
@@ -29,6 +30,9 @@ function ResetCenterView(props) {
   return null;
 }
 
+let url =
+  "https://api.maptiler.com/maps/basic/256/{z}/{x}/{y}.png?key=" + MAP_KEY + "";
+
 export default function Maps(props) {
   const { selectPosition } = props;
   const locationSelection = [selectPosition?.lat, selectPosition?.lon];
@@ -40,7 +44,7 @@ export default function Maps(props) {
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://api.maptiler.com/maps/basic/256/{z}/{x}/{y}.png?key={MAP_KEY}"
+        url={url}
       />
       {selectPosition && (
         <Marker position={locationSelection} icon={icon}>

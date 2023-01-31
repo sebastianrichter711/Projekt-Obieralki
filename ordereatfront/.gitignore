@@ -24,3 +24,5 @@ yarn-error.log*
 
 localhost.pem
 localhost-key.pem
+
+src/components/maps/mapkey.js

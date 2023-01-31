@@ -10,11 +10,9 @@ from werkzeug.security import generate_password_hash
 from fastapi import FastAPI,Request
 import uvicorn
 from fastapi.middleware.wsgi import WSGIMiddleware  
+from .
 
-conn="postgresql://{0}:{1}@{2}:{3}/{4}".format('postgres','postgres','localhost','5432','twojejedzenie3x')
-#conn="postgresql:///twojejedzenie3x?host=/run/postgresql"
-#conn="postgresql://postgres:postgres@db:5432/twojejedzenie3x"
-
+conn="postgresql+psycopg2://{0}:{1}@{2}:{3}/{4}".format('postgres','postgres',os.environ['DB_HOST'],os.environ['DB_PORT'],'example')
 
 tags_metadata = [
     {
