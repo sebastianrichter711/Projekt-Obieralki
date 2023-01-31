@@ -4,10 +4,13 @@ Projekt z przedmiotów: Pratyka Programowania Python, Projektowanie Aplikacji In
 
 Autor: Sebastian **RICHTER**
 
-- Politechnika Śląska
-- Wydział Automatyki, Elektroniki i Informatyki
-- kierunek: Informatyka SSM, semestr 2
-- specjalność: Oprogramowanie systemowe
+Politechnika Śląska
+
+Wydział Automatyki, Elektroniki i Informatyki
+
+kierunek: Informatyka SSM, semestr 2
+
+specjalność: Oprogramowanie systemowe
 
 ## Instrukcja uruchomienia aplikacji
 
