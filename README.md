@@ -29,6 +29,11 @@ specjalność: Oprogramowanie systemowe.
 
 ## API wykorzystane w projekcie
 
+![alt text](doc/apicz1.png)
+![alt text](doc/apicz2.png)
+![alt text](doc/apicz3.png)
+![alt text](doc/apicz4.png)
+
 ## Technologie
 
 - frontend: React.js 18.2.0,
