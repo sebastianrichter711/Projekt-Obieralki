@@ -9,10 +9,41 @@ import datetime
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required
 from fastapi import APIRouter, Body, Request, Response
 from .openapi_schemas import LoginRequest, RegisterRequest, ForgotPasswordRequest, ResetPasswordRequest
+import re
 
 views_auth = Blueprint('views_auth', __name__)
 auth_router = APIRouter()
 
+def validate_password(password):
+    special_chars=['@', '#', '$', '%', '^', '&', '+', '=', '*']
+    lower_case=False
+    upper_case=False
+    number=False
+    special_char=False
+
+    for el in password:
+        if 'a' <= el <= 'z':
+            lower_case=True
+        if 'A' <= el <= 'Z':
+            upper_case=True
+        if '0' <= el <= '9':
+            number=True
+        if el in special_chars:
+            special_char=True
+
+    if lower_case==True and upper_case==True and number==True and special_char==True:
+        return True
+    else:
+        return False 
+
+regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
+
+def is_valid_email(email):
+    if re.fullmatch(regex, email):
+        return True
+    else:
+        return False
+    
 @views_auth.route('/forgot-password', methods=['POST'])
 @auth_router.post('/api/auth/forgot-password', tags=["Auth"], description="Endpoint for reset user password", 
 responses={200: {"description": "User password was reset"}, 404: {"description": "Not found user with given email"}, 500: {"description":"Internal server error"}})
@@ -81,6 +112,8 @@ def reset_password(resetPassRequest: ResetPasswordRequest = Body(description="Re
         return jsonify('Passwords don\'t match.'), 400
     elif len(password) < 8:
         return jsonify('Password must be at least 8 characters.'),400
+    elif validate_password(password)!=True:
+        return jsonify('Password does not meet requirements from change password page.'),400
     user.pass_reset_token = ""
     user.password = generate_password_hash(password, method='sha256')
     db.session.commit()
@@ -105,12 +138,14 @@ def register(registerRequest: RegisterRequest = Body(description="Register reque
     user = User.query.filter_by(email=email).first()
     if user:
         return jsonify('Email already exists.'), 400
-    elif len(email) < 4:
-        return jsonify('Email must be greater than 3 characters.'), 400
+    elif is_valid_email(email)!=True:
+        return jsonify('Email must not meet requirements.'), 400
     elif password != password_again:
         return jsonify('Passwords don\'t match.'), 400
     elif len(password) < 8:
         return jsonify('Password must be at least 8 characters.'),400
+    elif validate_password(password)!=True:
+        return jsonify('Password does not meet requirements from register page.'),400
     else:
         new_user = User(active=True, date_created=datetime.datetime.utcnow(), email=email, password=generate_password_hash(
             password, method='sha256'),role=role, authorize_date=authorize_date, end_authorize_date=end_authorize_date)
@@ -120,6 +155,3 @@ def register(registerRequest: RegisterRequest = Body(description="Register reque
         return jsonify("A new user " + email + " was created!"), 201
 
     return jsonify("Register error"), 500
-    
-    
-    
