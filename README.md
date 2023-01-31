@@ -22,14 +22,32 @@ specjalność: Oprogramowanie systemowe.
 ## Zasada działania aplikacji dla poszczególnych użytkowników
 
 - **Niezalogowany użytkownik**
-- Może wyszukiwać restauracje znajdujące się w lub w pobliżu podanej przez niego lokalizacji. Na stronie głównej użytkownik
-  podaje lokalizację, następnie pokazuje się lista 10 wyników najbardziej zbliżonych do jego zapytania. Użytkownik wybiera jedną z nich, a następnie
-  naciska przycisk "Znajdź restuaracje", by wyświetlić listę restauracji znajdujących się w pobliżu wybranej lokalizacji.
-- Po wyborze
+
+1. Może wyszukiwać restauracje znajdujące się w lub w pobliżu podanej przez niego lokalizacji. Na stronie głównej użytkownik
+   podaje lokalizację, następnie pokazuje się lista 10 wyników najbardziej zbliżonych do jego zapytania. Użytkownik wybiera jedną z nich, a następnie
+   naciska przycisk "Znajdź restuaracje", by wyświetlić listę restauracji znajdujących się w pobliżu wybranej lokalizacji.
+2. Użytkownik z uzyskanej listy wybiera jedną z restauracji i przechodzi do widoku z najważniejszymi informacjami dot. restauracji oraz listą dań przez nią
+   oferowanych. Można przejść do szczegółów danej potrawy, klikając na jego nazwę, albo dodać ją do koszyka. W koszyku można zmieniać ilość zamawianych dań.
+3. Na stronie z listą dań dla danej restauracji można wyszukiwać dania po podanej nazwie.
+4. Niezalogowany użytkownik może sprawdzić koszyk na specjalnie dedykowanej stronie.
+5. Może założyć konto w serwisie, pamiętając jednocześnie o tym, by jego adres e-mail składał się z @ oraz by jego hasło miało min. 8 znaków i zawierało co najmniej
+   1 małą i dużą literę, 1 cyfrę oraz 1 znak specjalny.
+6. Może zalogować się do portalu oraz zmienić hasło (możliwe także, gdy gdy jest się zalogowanym).
 
 - **Zalogowany użytkownik**
 
+1. Może zamawiać dania. W ramach zamówienia można zamawiać dania z konkretnej restauracji. Jeśli użytkownik zakończył kompletowanie koszyka, to może przejść
+   do widoku podsumowania zamówienia, w którym podaje adres dostawy oraz formę płatności (karta płatnicza, BLIK, voucher).
+   a) jeżeli zamówienie zostanie złożone poprawnie, to zostanie wyświetlony komunikat o poprawnym złożeniu zamówienia. Jeśli nie, to pojawi się informacja o niepoprawnym
+   złożeniu zamówienia.
+   b) jeżeli kwota za zamówienia jest większa lub równa minimalnej kwocie zamówienia dla danej restauracji (z wyłączeniem kosztów dostawy), jaką musimy zapłacić, aby otrzymać bezpłatny transport dań, to użytkownik nie będzie musiał płacić za dostawę - w przeciwnym razie za dostawę zapłaci tyle, ile życzy sobie restauracja.
+2. Zalogowany użytkownik ma dostęp do panelu użytkownika, w którym może sprawdzić swoje dane osobowe, edytować je, usunąć konto, zmienić hasło lub przejść do strony
+   z widokiem listy zrealizowanych oraz niezrealizowanych zamówień przez niego złożonych.
+3. Możliwość wylogowania się z portalu.
+
 - **Administrator**
+
+1. Po zalogowaniu się w serwisie jako administrator, w nagłówku
 
 ## API wykorzystane w projekcie
 
