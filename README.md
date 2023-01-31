@@ -38,9 +38,12 @@ specjalność: Oprogramowanie systemowe.
 
 1. Może zamawiać dania. W ramach zamówienia można zamawiać dania z konkretnej restauracji. Jeśli użytkownik zakończył kompletowanie koszyka, to może przejść
    do widoku podsumowania zamówienia, w którym podaje adres dostawy oraz formę płatności (karta płatnicza, BLIK, voucher).
+
    a) jeżeli zamówienie zostanie złożone poprawnie, to zostanie wyświetlony komunikat o poprawnym złożeniu zamówienia. Jeśli nie, to pojawi się informacja o niepoprawnym
    złożeniu zamówienia.
+
    b) jeżeli kwota za zamówienia jest większa lub równa minimalnej kwocie zamówienia dla danej restauracji (z wyłączeniem kosztów dostawy), jaką musimy zapłacić, aby otrzymać bezpłatny transport dań, to użytkownik nie będzie musiał płacić za dostawę - w przeciwnym razie za dostawę zapłaci tyle, ile życzy sobie restauracja.
+
 2. Zalogowany użytkownik ma dostęp do panelu użytkownika, w którym może sprawdzić swoje dane osobowe, edytować je, usunąć konto, zmienić hasło lub przejść do strony
    z widokiem listy zrealizowanych oraz niezrealizowanych zamówień przez niego złożonych.
 3. Możliwość wylogowania się z portalu.
