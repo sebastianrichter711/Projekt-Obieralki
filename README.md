@@ -1,27 +1,27 @@
-# twojejedzenie.pl - Aplikacja do zamawiania dań przez Internet
+# twojejedzenie.pl - Food delivery app via Internet
 
-Projekt z przedmiotów: Pratyka Programowania Python, Projektowanie Aplikacji Internetowych, Organizacja i Rozwój Projektów Open Source
+Project from subjects:  Python Programming Practice (Praktyka Programowania Python), Web Application Design (Projektowanie Aplikacji Internetowych), Open Source Project Organization and Development (Organizacja i Rozwój Projektów Open Source)
 
-Autor: Sebastian **RICHTER**
+Author: Sebastian **RICHTER**
 
-Politechnika Śląska.
+Silesian University of Technology
 
-Wydział Automatyki, Elektroniki i Informatyki.
+Faculty of Automatic Control, Electronics and Computer Science
 
-kierunek: Informatyka SSM, semestr 2.
+Informatics, 2nd semester
 
-specjalność: Oprogramowanie systemowe.
+specialization: System Software
 
-## Instrukcja uruchomienia aplikacji
+## Instruction of launching the app
 
-**Wyświetlenie mapy z OpenStreetMap**
+**Showing a map from OpenStreetMap**
 
-Aby poprawnie wyświetliła się mapa na stronie głównej należy wykonać następujące kroki:
+In order to display properly the map on the homepage, follow these steps:
 
-1. Założyć konto w serwisie https://www.maptiler.com/
-2. Po rejestracji przejść na stronę https://cloud.maptiler.com/maps/. Tam należy przejść do zakładki API Keys
-   i skopiować wygenerowany klucz (przy nim będzie opis(description) "Default key").
-3. W lokalizacji ordereatfront/src/components/maps należy utworzyć plik mapkey.js i w nim umieścić następujący kod źródłowy.
+1. Create an account on the site https://www.maptiler.com/
+2. After the registration go to page https://cloud.maptiler.com/maps/.
+There go to API keys section and copy generated key (next to the key there should be a description "Default key").
+3. In location ordereatfront/src/components/maps create a file mapkey.js and type there the following source code.
 
 ```js
 const MAP_KEY = <YOUR_API_KEY>;
@@ -29,74 +29,67 @@ const MAP_KEY = <YOUR_API_KEY>;
 export default MAP_KEY;
 ```
 
-**Uruchomienie aplikacji**
+**Launching the app**
 
-1. Zainstalować Dockera wraz z narzędziem Docker Desktop.
-2. Przejść do folderu backend, otworzyć wiersz poleceń i wpisać komendę docker-compose up, aby uruchomić backend.
-3. Przejść do folderu ordereatfront, otworzyć wiersz poleceń i wpisać komendę docker-compose up, aby uruchomić frontend. W razie problemów, wpisać w wierszu poleceń
-   komendę npm install.
-4. Gdy uruchomi się frontend i backend, otworzyć przeglądarkę internetową i wpisać w niej adres https://localhost:3000.
+1. Install Docker with Docker Desktop tool.
+2. Go to backend folder, open the command line and type a command docker-compose up to launch backend.
+3. Go to ordereatfront folder, open the command line and type a command docker-compose up to launch frontend. In case of problems, type in the command line npm install.
+4. After launching frontend and backend, open the web browser and type an address https://localhost:3000.
 
-## Zasada działania aplikacji dla poszczególnych użytkowników
+## Application working principle for different users
 
-- **Niezalogowany użytkownik**
+- **Not logged-in user**
 
-1. Może wyszukiwać restauracje znajdujące się w lub w pobliżu podanej przez niego lokalizacji. Na stronie głównej użytkownik
-   podaje w wyszukiwarce lokalizację, następnie pokazuje się lista 10 wyników najbardziej zbliżonych do jego zapytania. Użytkownik wybiera jedną z nich, a następnie
-   naciska przycisk "Znajdź restauracje", by wyświetlić listę restauracji znajdujących się w pobliżu wybranej lokalizacji.
-2. Użytkownik z uzyskanej listy wybiera jedną z restauracji i przechodzi do widoku z najważniejszymi informacjami dot. lokalu (lokalizacja, koszt dostawy,
-   czas oczekiwania na dostawę, minimalna kwota zamówienia za dania w celu złożenia zamówienia z wybranej restauracji) oraz listą dań przez nią
-   oferowanych. Można przejść do szczegółów danej potrawy (takie jak: nazwa, cena, kategoria, opis), klikając na jego nazwę, albo dodać ją do koszyka poprzez
-   przycisk "Dodaj do koszyka". W koszyku można zmieniać ilość zamawianych dań do momentu przejścia do podsumowania zamówienia. Aby przejść do złożenia zamówienia, należy posiadać konto w serwisie, być zalogowanym oraz mieć niepusty koszyk dań.
-3. Na stronie z listą dań dla danej restauracji można wyszukiwać dania po podanej nazwie.
-4. Niezalogowany użytkownik może sprawdzić zawartość koszyka także na specjalnie dedykowanej stronie.
-5. Może założyć konto w serwisie, pamiętając jednocześnie o tym, by jego adres e-mail składniowo przypominał adres mailowy (w tym składał się ze znaku @) oraz by jego hasło miało min. 8 znaków i zawierało co najmniej 1 małą i dużą literę, 1 cyfrę oraz 1 znak specjalny.
-6. Może zalogować się do portalu oraz zmienić hasło (zmiana hasła możliwa także, gdy jest się zalogowanym).
+1. User can search for restaurants in or near the location user provides. On the homepage, the user specifies the location in the search engine, then a list of the 10 results closest to his query is shown. The user selects one of them and then presses the "Find restaurants" button to see a list of restaurants near the selected location.
+2. The user selects one of the restaurants from the obtained list and goes to the view with the most important information about the venue (location, delivery cost, delivery waiting time, minimum order amount for dishes to place an order from the selected restaurant) and a list of dishes offered by it. You can go to the details of a given dish (such as: name, price, category, description) by clicking on its name, or add it to the basket by clicking on the "Add to basket" button. In the basket you can change the number of ordered dishes until you go to the order summary. To proceed to placing an order, you must have an account on the site, be logged in and have a non-empty basket of dishes.
+3. On the page with the list of dishes for a particular restaurant, user can search for dishes by name.
+4. Non-logged users can also check the content of the basket on a dedicated page.
+5. User can create an account on the service. He has to remember that his e-mail address has to resemble syntactically an e-mail address (including the @ character) and that his password has to have at least 8 characters and contain at least 1 lowercase and uppercase letter, 1 digit and 1 special character.
+6. User can log in to the portal and change his password (change his password is also possible when user are logged in).
 
-- **Zalogowany użytkownik**
+- **Logged-in user**
 
-1. Może zamawiać dania. W ramach zamówienia należy zamawiać dania z konkretnej restauracji. Jeśli użytkownik zakończył kompletowanie koszyka, to może przejść
-   do widoku podsumowania zamówienia, w którym podaje adres dostawy oraz formę płatności (karta płatnicza, BLIK, voucher).
+1. Logged-in user can order dishes. As part of the order, he must order dishes from a specific restaurant. If the user has finished completing the shopping cart, he can go to the order summary view, where he specifies the delivery address and payment method (payment card, BLIK, voucher).
 
-   a) jeżeli zamówienie zostanie złożone poprawnie, to zostanie wyświetlony komunikat o poprawnym złożeniu zamówienia. Jeśli nie, to pojawi się informacja o niepoprawnym
-   złożeniu zamówienia.
+   a) If the order is placed correctly, a message about the correct placing of the order will be displayed. If not, he will see a message about incorrect placing an order.
 
-   b) jeżeli sumaryczna kwota za dania jest większa lub równa minimalnej kwocie zamówienia dla danej restauracji (z wyłączeniem kosztów dostawy), jaką musimy zapłacić, aby otrzymać bezpłatny transport dań, to użytkownik nie będzie musiał płacić za dostawę - w przeciwnym razie za dostawę zapłaci tyle, ile życzy sobie restauracja.
+   b) If the total amount for dishes is greater than or equal to the minimum order amount for a given restaurant (excluding delivery costs) that user have to pay to receive free delivery, he will not have to pay for the delivery - otherwise user will pay for the delivery as much as the restaurant wants.
 
-2. Zalogowany użytkownik ma dostęp do panelu użytkownika (przejście poprzez ikonkę ludzika w headerze strony), w którym może sprawdzić swoje dane osobowe, edytować je, usunąć konto, zmienić hasło lub przejść do strony z widokiem listy zrealizowanych oraz niezrealizowanych zamówień przez niego złożonych.
-3. Możliwość wylogowania się z portalu.
-4. Możliwość korzystania z opcji dostępnych dla niezalogowanego użytkownika za wyjątkiem rejestracji i logowania.
+2. The logged-in user has access to the user panel (go through the human icon in the header of the page), where he can check his personal data, edit them, delete his account, change his password or go to the page with a list of completed and uncompleted orders placed by him.
+3. Ability to log out of the portal.
+4. Ability to use the options available to the non-logged user except for registration and login.
 
 - **Administrator**
 
-1. Po zalogowaniu się w serwisie jako administrator, w nagłówku strony pojawi się dodatowy przycisk "Panel admina". Po jego kliknięciu pojawi się panel administracyjny,
-   w którym może on zarządzać użytkownikami, restauracjami, daniami oraz zamówieniami (dodawanie (za wyjątkiem zamówień), edytowanie, wyświetlanie oraz usuwanie). W sytuacji,
-   gdy pojawi się np. błąd w zamówieniu, możliwe jest wprowadzenie korekty.
-2. Możliwość korzystania z wszystkich funkcjonalności systemu.
+1. After logging into the site as an administrator, an additional button "Admin Panel" will appear in the page header. After clicking on it, user with this grant will see an administration panel where he can manage users, restaurants, dishes and orders (add (except orders), edit, display and delete). If, for example, there is an error in the order, it is possible to make a correction.
+2. Ability to use all functionalities of the system.
 
-## API wykorzystane w projekcie
+## API used in project
 
-Dokumentacja API utworzona przy użyciu platformy FastAPI wraz z opisem niezbędnych parametrów oraz zwracanych kodów HTTP po uruchomieniu projektu backendu dostępna jest
-pod adresem http://localhost:5000/docs
+API documentation created using FastAPI platform with description of necessary parameters and HTTP codes returned after running the backend project is available
+at http://localhost:5000/docs.
 
 ![alt text](doc/apicz1.png)
 ![alt text](doc/apicz2.png)
 ![alt text](doc/apicz3.png)
 ![alt text](doc/apicz4.png)
 
-## Technologie
+## Technologies
 
 - frontend: React.js 18.2.0,
-- menedżer pakietów npm w wersji 9.3.1,
+- npm package manager in version 9.3.1,
 - backend: Python 3.11, Flask 2.2.2, FastAPI 0.89.1, SQLAlchemy 2.0.0
-  (lista wszystkich użytych pakietów Pythona dostępna w pliku requirements.txt w folderze backend)
-- baza danych: PostgreSQL 11,
-- konteneryzacja projektu: Docker 20.10.21 wraz z Docker Desktop 4.15.0
-- testowanie API: SwaggerUI/Postman 10.9.0,
-- środowisko do implementacji projektu: Visual Studio Code 1.74.3,
-- system kontroli wersji Git,
-- przeglądarka internetowa Microsoft Edge w wersji 109.0.1518.70 lub Mozilla Firefox w wersji 109.0.
+  (list of all used Python libraries is available in a file requirements.txt in backend
+  folder),
+- database engine: PostgreSQL 11,
+- project containerization: Docker 20.10.21 with Docker Desktop 4.15.0,
+- API testing: SwaggerUI/Postman 10.9.0,
+- IDE: Visual Studio Code 1.74.3,
+- Git version control system,
+- recommended web browsers: 
+   - Microsoft Edge 109.0.1518.70,
+   - Mozilla Firefox 109.0.
 
-## Licencja
+## License
 
 Licensed under the [MIT License](LICENSE)
