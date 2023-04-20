@@ -81,7 +81,7 @@ at http://localhost:5000/docs.
 - backend: Python 3.11, Flask 2.2.2, FastAPI 0.89.1, SQLAlchemy 2.0.0
   (list of all used Python libraries is available in a file requirements.txt in backend
   folder),
-- database engine: PostgreSQL 11,
+- database: PostgreSQL 11 with pgAdmin 4,
 - project containerization: Docker 20.10.21 with Docker Desktop 4.15.0,
 - API testing: SwaggerUI/Postman 10.9.0,
 - IDE: Visual Studio Code 1.74.3,
